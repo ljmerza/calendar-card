@@ -5,6 +5,7 @@
 </p>
 
 <h2>Features</h2>
+
 * show the next 5 events on your Google Calendar (default set by home assistant)
 * Set custom time format for each event
 * click on event to open in your Google calendar app
