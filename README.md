@@ -63,7 +63,7 @@ Add the custom card to views:
 ```
 views:
   - type: custom:calendar-card
-        name: "My Calendar"
+        title: "My Calendar"
         numberOfDays: 14
         entities:
           - calendar.ljmerzagmailcom
