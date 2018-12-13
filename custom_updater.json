@@ -2,8 +2,8 @@
   "calendar-card": {
     "updated_at": "2018-12-13",
     "version": "1.2.0",
-    "remote_location": "https://raw.githubusercontent.com/ljmerza/homeassistant-lovelace-google-calendar-card/master/calendar-card.js",
-    "visit_repo": "https://github.com/ljmerza/homeassistant-lovelace-google-calendar-card",
-    "changelog": "https://github.com/ljmerza/homeassistant-lovelace-google-calendar-card/releases/latest"
+    "remote_location": "https://raw.githubusercontent.com/ljmerza/calendar-card/master/calendar-card.js",
+    "visit_repo": "https://github.com/ljmerza/calendar-card",
+    "changelog": "https://github.com/ljmerza/calendar-card/releases/latest"
   }
 }
