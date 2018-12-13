@@ -13,6 +13,7 @@
 * Update notifications via custom_updater
 
 <h2>Track Updates</h2>
+
 This custom card can be tracked with the help of [custom-updater](https://github.com/custom-components/custom_updater).
 
 In your configuration.yaml
@@ -66,7 +67,9 @@ views:
 ```
 
 <h2>You want more than 5 Google events?</h2>
-```mkdir /config/custom_components/calendar
+
+```
+mkdir /config/custom_components/calendar
 cd /config/custom_components/calendar
 wget https://raw.githubusercontent.com/home-assistant/home-assistant/dev/homeassistant/components/calendar/google.py
 ```
