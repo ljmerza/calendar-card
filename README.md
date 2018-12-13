@@ -34,6 +34,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:calendar-card`
+| name | string | **Optional** | `Calendar` Header shown at top of card
 | showProgressBar | boolean | **Optional** | `true` Option to show the progress bar
 | numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | entities | object | **Required** | List of calendars to display
