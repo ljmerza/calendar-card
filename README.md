@@ -45,7 +45,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 Go to your config directory and create a www folder. Inside the www run
 
 ```
-git clone https://github.com/ljmerza/homeassistant-lovelace-google-calendar-card.git
+git clone https://github.com/ljmerza/calendar-card.git
 ```
 
 In your ui-lovelace.yaml
@@ -54,7 +54,7 @@ In your ui-lovelace.yaml
 resources:
   - url: https://unpkg.com/moment@2.23.0/moment.js
     type: js
-  - url: /local/homeassistant-lovelace-google-calendar-card/calendar-card.js?v=1.1.0
+  - url: /local/calendar-card/calendar-card.js?v=1.1.0
     type: module
 ```
 
