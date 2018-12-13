@@ -28,69 +28,69 @@ class CalendarCard extends HTMLElement {
 
     // save css rules
     this.cssRules = `
-	    <style>
-	      .day-wrapper {
-	        border-bottom: 1px solid;
-	      }
+      <style>
+        .day-wrapper {
+          border-bottom: 1px solid;
+        }
 
-	      .day-wrapper:last-child {
-	        border-bottom: none;
-	      }
+        .day-wrapper:last-child {
+          border-bottom: none;
+        }
 
-	      .day-wrapper .day {
-	        display: flex;
-	        flex-direction: row;
-	        width: 100%;
-	      }
+        .day-wrapper .day {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+        }
 
-	      .day-wrapper .date {
-	        display: flex;
-	        flex-direction: column;
-	        align-items: center;
-	        justify-content: top;
-	        flex: 0 1 40px;
-	        padding-top: 10px;
-	      }
+        .day-wrapper .date {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: top;
+          flex: 0 1 40px;
+          padding-top: 10px;
+        }
 
-	      .day-wrapper .events {
-	        flex: 1 1 auto;
-	      }
+        .day-wrapper .events {
+          flex: 1 1 auto;
+        }
 
-	      .day-wrapper .summary {
-	      	font-size: 1.2em;
-	      }
+        .day-wrapper .summary {
+          font-size: 1.2em;
+        }
 
-	      .day-wrapper .event-wrapper {
-	        margin-left: 10px;
-	        padding-top: 10px;
-	      }
+        .day-wrapper .event-wrapper {
+          margin-left: 10px;
+          padding-top: 10px;
+        }
 
-	      .day-wrapper .event-wrapper:last-child {
-    			padding-bottom: 10px;
-	      }
+        .day-wrapper .event-wrapper:last-child {
+          padding-bottom: 10px;
+        }
 
-	      .day-wrapper .event {
-	        flex: 0 1 auto;
-	        display: flex;
-	        flex-direction: column;
-	      }
+        .day-wrapper .event {
+          flex: 0 1 auto;
+          display: flex;
+          flex-direction: column;
+        }
 
-	      .day-wrapper .info {
-	        display: flex;
-	        width: 100%;
-	        justify-content: space-between;
-	        flex-direction: row;
-	      }
+        .day-wrapper .info {
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+          flex-direction: row;
+        }
 
-	      .day-wrapper .time {
-	        color: var(--primary-color);
-	      }
+        .day-wrapper .time {
+          color: var(--primary-color);
+        }
 
-	      .day-wrapper ha-icon {
-	        color: var(--paper-item-icon-color, #44739e);
-	      }
-	    </style>
-	  `;
+        .day-wrapper ha-icon {
+          color: var(--paper-item-icon-color, #44739e);
+        }
+      </style>
+    `;
 
     // update card with calendars
     this
@@ -187,15 +187,15 @@ class CalendarCard extends HTMLElement {
     let momentDay = moment(day);
 
     return `
-	      <div class="day">
-	        <div class="${className}">
-	          <div>${momentDay.format('DD')}</div>
-	          <div>${momentDay.format('ddd')}</div>
-	        </div>
-	        <div class="events">
-	        	${events.map(event => this.getEventHtml(event)).join('')}
-	        </div>
-	      </div>`;
+        <div class="day">
+          <div class="${className}">
+            <div>${momentDay.format('DD')}</div>
+            <div>${momentDay.format('ddd')}</div>
+          </div>
+          <div class="events">
+            ${events.map(event => this.getEventHtml(event)).join('')}
+          </div>
+        </div>`;
   }
 
   /**
@@ -207,16 +207,26 @@ class CalendarCard extends HTMLElement {
     if(event.type) return '';
 
     return `
-		      <div class="event-wrapper">
-		        <div class="event" ${this.getLinkHtml(event)}>
-		          <div class="info">
-		            <div class="summary">${event.title}</div>
-		            ${this.getLocationHtml(event)}
-		          </div>
-		          <div class="time">${this.getTimeHtml(event)}</div>
-		        </div>
-		      </div>`;
-			  }
+          <div class="event-wrapper">
+            <div class="event" ${this.getLinkHtml(event)}>
+              <div class="info">
+                <div class="summary">
+                  ${this.getTitleHtml(event)}
+                </div>
+                ${this.getLocationHtml(event)}
+              </div>
+              <div class="time">${this.getTimeHtml(event)}</div>
+            </div>
+          </div>`;
+  }
+
+  /**
+   * gets the ebent title with a colored marker if user wants
+   * @return {[type]} [description]
+   */
+  getTitleHtml(event){
+    return this.config.showColors ? `<span style="color: ${event.color || ''};">&#9679;&nbsp;${event.title}</span>` : `${event.title}`;
+  }
 
   /**
    * generates HTML for opening an event
@@ -278,6 +288,7 @@ class CalendarCard extends HTMLElement {
       name: 'Calendar',
       showProgressBar: true,
       numberOfDays: 7,
+      showColors: false,
       timeFormat: 'HH:mm',
       ...config
     };

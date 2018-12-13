@@ -36,7 +36,8 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | showProgressBar | boolean | **Optional** | `true` Option to show the progress bar
 | numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | entities | object | **Required** | List of calendars to display
-| timeFormat | object | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
+| timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
+| showColors | boolean | **Optional** | `false` Add event color marker to event summary
 
 <h2>Configuration</h2>
 Go to your config directory and create a www folder. Inside the www run
