@@ -11,6 +11,7 @@
 * click on event to open in your Google calendar app
 * Integrate multiple calendars
 * Update notifications via custom_updater
+* Show event color
 
 <h2>Track Updates</h2>
 
