@@ -1,6 +1,4 @@
 # Calendar Card for Home Assistant
-![](https://i.imgur.com/egQofZM.png "Layout")
-()
 
 ### Features
 * show the next 5 events on your Google Calendar (default set by home assistant)
