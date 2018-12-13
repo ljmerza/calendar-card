@@ -1,13 +1,17 @@
-# Calendar Card for Home Assistant
+<h1 align="center">Calendar Card for Home Assistant</h1>
 
-### Features
+<p align="center">
+  <img src='https://i.imgur.com/86RGw5W.png' />
+</p>
+
+<h2>Features</h2>
 * show the next 5 events on your Google Calendar (default set by home assistant)
 * Set custom time format for each event
 * click on event to open in your Google calendar app
 * Integrate multiple calendars
 * Update notifications via custom_updater
 
-### Track Updates
+<h2>Track Updates</h2>
 This custom card can be tracked with the help of [custom-updater](https://github.com/custom-components/custom_updater).
 
 In your configuration.yaml
@@ -18,11 +22,11 @@ custom_updater:
     - https://raw.githubusercontent.com/ljmerza/homeassistant-lovelace-google-calendar-card/master/custom_updater.json
 ```
 
-## Usage
-### Prerequisites
+<h1>Usage</h1>
+<h2>Prerequisites</h2>
 You should have setup Google calendar integration or Caldav integration in HomeAssistant.
 
-## Options
+<h2>Options</h2>
 
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
@@ -32,7 +36,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | entities | object | **Required** | List of calendars to display
 | timeFormat | object | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
 
-### Configuration
+<h2>Configuration</h2>
 Go to your config directory and create a www folder. Inside the www run
 
 ```
@@ -60,9 +64,8 @@ views:
           - calendar.ljmerzagmailcom
 ```
 
-### You want more than 5 Google events?
-```
-mkdir /config/custom_components/calendar
+<h2>You want more than 5 Google events?</h2>
+```mkdir /config/custom_components/calendar
 cd /config/custom_components/calendar
 wget https://raw.githubusercontent.com/home-assistant/home-assistant/dev/homeassistant/components/calendar/google.py
 ```
