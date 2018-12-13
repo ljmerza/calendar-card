@@ -15,7 +15,7 @@ class CalendarCard extends HTMLElement {
     // if we don't have the card yet then create it
     if (!this.content) {
       const card = document.createElement('ha-card');
-      card.header = this.config.name;
+      card.header = this.config.title;
       this.content = document.createElement('div');
       this.content.style.padding = '0 16px 10px';
       card.appendChild(this.content);
@@ -285,7 +285,7 @@ class CalendarCard extends HTMLElement {
     }
 
     this.config = {
-      name: 'Calendar',
+      title: 'Calendar',
       showProgressBar: true,
       numberOfDays: 7,
       showColors: false,
