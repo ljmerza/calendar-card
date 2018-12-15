@@ -22,7 +22,7 @@ In your configuration.yaml
 ```
 custom_updater:
   card_urls:
-    - https://raw.githubusercontent.com/ljmerza/homeassistant-lovelace-google-calendar-card/master/custom_updater.json
+    - https://raw.githubusercontent.com/ljmerza/calendar-card/master/custom_updater.json
 ```
 
 <h1>Usage</h1>
