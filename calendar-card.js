@@ -261,7 +261,7 @@ class CalendarCard extends HTMLElement {
           <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;`
     }
 
-    if (event.location && locationAddress) {
+    if (event.location && event.locationAddress) {
       locationHtml += `
           <a href="https://www.google.com/maps/place/${event.locationAddress}" target="_blank">
             ${event.location}
