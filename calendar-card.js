@@ -118,11 +118,8 @@ class CalendarCard extends HTMLElement {
     const end = today.add(this.config.numberOfDays, 'days').format(dateFormat);
 
     // generate urls for calendars and get each calendar data
-    const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
-    let allResults = await this.getAllUrls(urls);
-
-    // convert each calendar object to a UI event
-    let events = [].concat.apply([], allResults).map(event => new CalendarEvent(event));
+    const urls = this.createCalendarUrls(entities);
+    const events = await this.getAllUrls(urls);
     
     // show progress bar if turned on
     if (this.config.showProgressBar && events.length > 0 && moment().format('DD') === moment(events[0].startDateTime).format('DD')) {
@@ -138,7 +135,49 @@ class CalendarCard extends HTMLElement {
     this.events = events;
     this.lastUpdate = moment();
     return { events, isSomethingChanged };
-    
+  }
+
+  /**
+   * generate calendar urls to get calendars
+   * @param  {Array<string>} entities
+   * @return {Array<string>}
+   */
+  createCalendarUrls(entities){
+
+    // create url params
+    let start = new Date();
+    start = this.getFormattedDate(start);
+
+    let end = new Date();
+    end = this.addDays(end, this.config.numberOfDays);
+    end = this.getFormattedDate(end);
+
+    // generate urls for calendars and get each calendar data
+    return entities.map(entity => `calendars/${entity}?start=${start}&end=${end}`);
+  }
+
+  /**
+   * get date in YYYY-MM-DDTHH:MM:SST format
+   * @param  {Date} date the date object to format
+   * @return {string}
+   */
+  getFormattedDate(date){
+    const month = ( '0' + (date.getMonth()+1) ).slice(-2);
+    const day = ( '0' + date.getDate() ).slice(-2);
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}T00:00:00Z`;
+  }
+
+  /**
+   * [addDays description]
+   * @param {Date} date the date object
+   * @param {number} days number of days to add
+   * @return {Date} new date object with days added
+   */
+  addDays(date, days) {
+    let newDate = new Date(date.valueOf());
+    newDate.setDate(newDate.getDate() + days);
+    return newDate;
   }
 
   /**
@@ -148,7 +187,9 @@ class CalendarCard extends HTMLElement {
    */
   async getAllUrls(urls) {
     try {
-      return await Promise.all(urls.map(url => this._hass.callApi('get', url)));
+      const allResults = await Promise.all(urls.map(url => this._hass.callApi('get', url)));
+      return [].concat.apply([], allResults).map(event => new CalendarEvent(event));
+
     } catch (error) {
       throw error;
     }
