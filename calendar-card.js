@@ -63,6 +63,7 @@ class CalendarCard extends HTMLElement {
         .day-wrapper .event-wrapper {
           margin-left: 10px;
           padding-top: 10px;
+          cursor: pointer;
         }
 
         .day-wrapper .event-wrapper:last-child {
