@@ -54,7 +54,7 @@ In your ui-lovelace.yaml
 resources:
   - url: https://unpkg.com/moment@2.23.0/moment.js
     type: js
-  - url: /local/calendar-card/calendar-card.js?v=1.2.2
+  - url: /local/calendar-card/calendar-card.js?v=1.3.0
     type: module
 ```
 
