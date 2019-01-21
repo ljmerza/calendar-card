@@ -19,7 +19,7 @@ This custom card can be tracked with the help of [custom-updater](https://github
 
 In your configuration.yaml
 
-```
+```yaml
 custom_updater:
   card_urls:
     - https://raw.githubusercontent.com/ljmerza/calendar-card/master/custom_updater.json
@@ -44,13 +44,13 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 <h2>Configuration</h2>
 Go to your config directory and create a www folder. Inside the www run
 
-```
+```bash
 git clone https://github.com/ljmerza/calendar-card.git
 ```
 
 In your ui-lovelace.yaml
 
-```
+```yaml
 resources:
   - url: https://unpkg.com/moment@2.23.0/moment.js
     type: js
@@ -60,18 +60,18 @@ resources:
 
 Add the custom card to views:
 
-```
+```yaml
 views:
   - type: custom:calendar-card
-        title: "My Calendar"
-        numberOfDays: 14
-        entities:
-          - calendar.ljmerzagmailcom
+    title: "My Calendar"
+    numberOfDays: 14
+    entities:
+      - calendar.ljmerzagmailcom
 ```
 
 <h2>You want more than 5 Google events?</h2>
 
-```
+```bash
 mkdir /config/custom_components/calendar
 cd /config/custom_components/calendar
 wget https://raw.githubusercontent.com/home-assistant/home-assistant/dev/homeassistant/components/calendar/google.py
