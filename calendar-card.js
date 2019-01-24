@@ -17,7 +17,7 @@ class CalendarCard extends HTMLElement {
       const card = document.createElement('ha-card');
       card.header = this.config.title;
       this.content = document.createElement('div');
-      this.content.style.padding = '0 16px 10px';
+      this.content.className = 'calendar-card';
       card.appendChild(this.content);
       this.appendChild(card);
       moment.locale(hass.language);
@@ -29,6 +29,11 @@ class CalendarCard extends HTMLElement {
     // save css rules
     this.cssRules = `
       <style>
+        .calendar-card {
+          display: flex;
+          padding: 0 16px 4px;
+          flex-direction: column;
+        }
         .day-wrapper {
           border-bottom: 1px solid;
         }
@@ -37,7 +42,7 @@ class CalendarCard extends HTMLElement {
           border-bottom: none;
         }
 
-        .day-wrapper .day {
+        .day-wrapper .calendar-day {
           display: flex;
           flex-direction: row;
           width: 100%;
@@ -188,7 +193,7 @@ class CalendarCard extends HTMLElement {
     let momentDay = moment(day);
 
     return `
-        <div class="day">
+        <div class="calendar-day">
           <div class="${className}">
             <div>${momentDay.format('DD')}</div>
             <div>${momentDay.format('ddd')}</div>
