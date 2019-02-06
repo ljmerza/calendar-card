@@ -77,6 +77,7 @@ class CalendarCard extends LitElement {
 
         .day-wrapper td {
           padding-top: 10px;
+          cursor: pointer;
         }
 
         .day-wrapper.day-wrapper-last > td {
