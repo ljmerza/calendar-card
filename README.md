@@ -4,14 +4,23 @@
   <img src='https://i.imgur.com/86RGw5W.png' />
 </p>
 
+
+<h2>Upgrading from version 1.x.x to 2.x.x</h2>
+
+Version 2.x.x introduced the following breaking changes:
+* eventColor is no longer supported
+* progressBar is no longer supported
+* explicit adding moment.js to YAML config is no longer needed
+* Card was convertered from a module to js (see new YAML example below)
+
 <h2>Features</h2>
 
-* show the next 5 events on your Google Calendar (default set by home assistant)
+* Show the next 5 events on your Google Calendar (default set by home assistant)
 * Set custom time format for each event
-* click on event to open in your Google calendar app
+* Click on event to open in your Google calendar app
 * Integrate multiple calendars
 * Update notifications via custom_updater
-* Show event color
+* Click on event location to open maps app
 
 <h2>Track Updates</h2>
 
@@ -35,11 +44,9 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:calendar-card`
 | title | string | **Optional** | `Calendar` Header shown at top of card
-| showProgressBar | boolean | **Optional** | `true` Option to show the progress bar
 | numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | entities | object | **Required** | List of calendars to display
 | timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
-| showColors | boolean | **Optional** | `false` Add event color marker to event summary
 
 <h2>Configuration</h2>
 Go to your config directory and create a www folder. Inside the www run
@@ -52,10 +59,8 @@ In your ui-lovelace.yaml
 
 ```
 resources:
-  - url: https://unpkg.com/moment@2.23.0/moment.js
+  - url: /local/calendar-card/calendar-card.js?v=2.0.0
     type: js
-  - url: /local/calendar-card/calendar-card.js?v=1.2.2
-    type: module
 ```
 
 Add the custom card to views:
