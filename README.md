@@ -21,6 +21,7 @@ Version 2.x.x introduced the following breaking changes:
 * Integrate multiple calendars
 * Update notifications via custom_updater
 * Click on event location to open maps app
+* Language support
 
 <h2>Track Updates</h2>
 

@@ -21,7 +21,7 @@ class CalendarCard extends LitElement {
     this.lastUpdate;
     this.isUpdating = false;
 
-    this.momentSrc = 'https://unpkg.com/moment@2.23.0/moment.js';
+    this.momentSrc = 'https://unpkg.com/moment@2.23.0/min/moment-with-locales.js';
   }
 
   /**
@@ -152,7 +152,6 @@ class CalendarCard extends LitElement {
 
     // don't update if it's only been 15 min
     if(this.lastUpdate && moment().diff(this.lastUpdate, 'minutes') <= 15) {
-      console.log('testtt');
       return this.events;
     }
     
@@ -173,7 +172,6 @@ class CalendarCard extends LitElement {
     events.sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
 
     // see if anything changed since last time, save events, and update last time we updated
-    console.log(events, this.events);
     this.isSomethingChanged = JSON.stringify(events) !== JSON.stringify(this.events);
     this.events = events;
     this.lastUpdate = moment();
