@@ -60,7 +60,7 @@ In your ui-lovelace.yaml
 
 ```yaml
 resources:
-  - url: /local/calendar-card/calendar-card.js?v=2.0.0
+  - url: /local/calendar-card/calendar-card.js?v=2.0.1
     type: js
 ```
 
