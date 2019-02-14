@@ -4,15 +4,6 @@
   <img src='https://i.imgur.com/86RGw5W.png' />
 </p>
 
-
-<h2>Upgrading from version 1.x.x to 2.x.x</h2>
-
-Version 2.x.x introduced the following breaking changes:
-* eventColor is no longer supported
-* progressBar is no longer supported
-* explicit adding moment.js to YAML config is no longer needed
-* Card was convertered from a module to js (see new YAML example below)
-
 <h2>Features</h2>
 
 * Show the next 5 events on your Google Calendar (default set by home assistant)
@@ -22,6 +13,7 @@ Version 2.x.x introduced the following breaking changes:
 * Update notifications via custom_updater
 * Click on event location to open maps app
 * Language support
+* Progress bar for ongoing events
 
 <h2>Track Updates</h2>
 
@@ -48,6 +40,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | entities | object | **Required** | List of calendars to display
 | timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
+| progressBar | boolean | **Optional** | `false` Adds progress bar to ongoing events
 
 <h2>Configuration</h2>
 Go to your config directory and create a www folder. Inside the www run
@@ -60,7 +53,7 @@ In your ui-lovelace.yaml
 
 ```yaml
 resources:
-  - url: /local/calendar-card/calendar-card.js?v=2.0.1
+  - url: /local/calendar-card/calendar-card.js?v=2.1.0
     type: js
 ```
 
@@ -71,6 +64,7 @@ views:
   - type: custom:calendar-card
     title: "My Calendar"
     numberOfDays: 14
+    progressBar: true
     entities:
       - calendar.ljmerzagmailcom
 ```

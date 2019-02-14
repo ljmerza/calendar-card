@@ -1,7 +1,7 @@
 {
   "calendar-card": {
-    "updated_at": "2019-02-07",
-    "version": "2.0.1",
+    "updated_at": "2019-02-14",
+    "version": "2.1.0",
     "remote_location": "https://raw.githubusercontent.com/ljmerza/calendar-card/master/calendar-card.js",
     "visit_repo": "https://github.com/ljmerza/calendar-card",
     "changelog": "https://github.com/ljmerza/calendar-card/releases/latest"

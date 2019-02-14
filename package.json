@@ -1,6 +1,6 @@
 {
   "name": "static-html-webpack-boilerplate",
-  "version": "1.1.0",
+  "version": "2.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,10 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/erickzhao/static-html-webpack-boilerplate.git"
+    "url": "git+https://github.com/ljmerza/calendar-card.git"
   },
-  "author": "erick zhao",
-  "license": "ISC",
+  "author": "leonardo merza",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "babel-cli": "^6.26.0",

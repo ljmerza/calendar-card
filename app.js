@@ -39,6 +39,7 @@ class CalendarCard extends LitElement {
       title: 'Calendar',
       numberOfDays: 7,
       timeFormat: 'HH:mm',
+      progressBar: false,
       ...config
     };
   }
@@ -101,6 +102,22 @@ class CalendarCard extends LitElement {
 
         .day-wrapper .overview .time,
         .day-wrapper .location ha-icon {
+          color: var(--primary-color);
+        }
+
+        .day-wrapper hr.progress-bar {
+          border-style: solid;
+          border-color: var(--secondary-color);
+          border-width: 1px 0 0 0;
+          margin-top: -7px;
+          margin-left: 0px;
+          color: var(--primary-color);
+          width: 100%;
+        }
+
+        .day-wrapper ha-icon.progress-bar {
+          height: 12px;
+          width: 12px;
           color: var(--primary-color);
         }
 
@@ -210,9 +227,10 @@ class CalendarCard extends LitElement {
               <div>${index === 0 ? momentDay.format('DD') : ''}</div>
               <div>${index === 0 ? momentDay.format('ddd') : ''}</div>
             </td>
-            <td class="overview">
-              <div class="title" @click=${e=> this.getLinkHtml(event)}>${event.title}</div>
+            <td class="overview" @click=${e => this.getLinkHtml(event)}>
+              <div class="title">${event.title}</div>
               <div class="time">${this.getTimeHtml(event)}</div>
+              ${this.config.progressBar ? this.buildProgressBar(event) : ''}
             </td>
             <td class="location">
               ${this.getLocationHtml(event)}
@@ -247,14 +265,37 @@ class CalendarCard extends LitElement {
   }
 
   /**
+   * if event is going on now then build progress bar for event
+   * @param {CalendarEvent} event
+   * @return {TemplateResult}
+   */
+  buildProgressBar(event){
+    if (!event.startDateTime || !event.endDateTime || event.isFullDayEvent) return html``;
+    
+    const now = moment(new Date());
+    const start = moment(event.startDateTime);
+    const end = moment(event.endDateTime);
+    if (now.isBefore(start) || now.isSameOrAfter(end) || !start.isValid() || !end.isValid()) return html``;
+
+    const nowSeconds = now.unix();
+    const startSeconds = start.unix();
+    const endSeconds = end.unix();
+    const secondsPercent = (nowSeconds - startSeconds) / (endSeconds - startSeconds) * 100;
+    
+    return html`
+      <ha-icon icon="mdi:circle" class="progress-bar" style='margin-left:${secondsPercent}%;'></ha-icon>
+      <hr class="progress-bar" />
+    `;
+  }
+
+  /**
    * group events by the day it's on
    * @param  {Array<CalendarEvent>} events
    * @return {Array<Object>}          
    */
   groupEventsByDay(events) {
-    const groupedEvents = [];
+    return events.reduce((groupedEvents, event) => {
 
-    events.forEach(event => {
       const day = moment(event.startDateTime).format('YYYY-MM-DD');
       const matchingDateIndex = groupedEvents.findIndex(events => events.day === day)
 
@@ -263,9 +304,9 @@ class CalendarCard extends LitElement {
       } else {
         groupedEvents.push({ day, events: [event] });
       }
-    });
 
-    return groupedEvents;
+      return groupedEvents;
+    },[]);
   }
 
   /**
