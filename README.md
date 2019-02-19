@@ -43,17 +43,13 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | progressBar | boolean | **Optional** | `false` Adds progress bar to ongoing events
 
 <h2>Configuration</h2>
-Go to your config directory and create a www folder. Inside the www run
-
-```bash
-git clone https://github.com/ljmerza/calendar-card.git
-```
+Download `calendar-card.js` from the [latest release](https://github.com/ljmerza/calendar-card/releases/latest) and upload it your /www folder of your Home Assistant config directory.
 
 In your ui-lovelace.yaml
 
 ```yaml
 resources:
-  - url: /local/calendar-card/calendar-card.js?v=2.1.0
+  - url: /local/calendar-card.js?v=3.0.0
     type: js
 ```
 
