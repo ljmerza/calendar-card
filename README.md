@@ -36,7 +36,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:calendar-card`
-| title | string | **Optional** | `Calendar` Header shown at top of card
+| title | string|boolean | **Optional** | `Calendar` Header shown at top of card or false to hide
 | numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | entities | object | **Required** | List of calendars to display
 | timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
@@ -49,7 +49,7 @@ In your ui-lovelace.yaml
 
 ```yaml
 resources:
-  - url: /local/calendar-card.js?v=3.0.0
+  - url: /local/calendar-card.js?track=true
     type: js
 ```
 

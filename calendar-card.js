@@ -89,15 +89,17 @@
         ${n}
       `},O``);this.content=O`
       <ha-card class='calendar-card'>
-        <div class='header'>
-          ${this.config.title}
-        </div>
+        ${this.createHeader()}
         <table>
           <tbody>
             ${t}
           </tbody>
         </table>
       </ha-card>
+    `}createHeader(){return!1===this.config.title?O``:O`
+      <div class='header'>
+        ${this.config.title}
+      </div>
     `}buildProgressBar(e){if(!e.startDateTime||!e.endDateTime||e.isFullDayEvent)return O``;const t=a(new Date),s=a(e.startDateTime),n=a(e.endDateTime);if(t.isBefore(s)||t.isSameOrAfter(n)||!s.isValid()||!n.isValid())return O``;const r=t.unix(),i=s.unix(),d=n.unix();return O`
       <ha-icon icon="mdi:circle" class="progress-bar" style='margin-left:${(r-i)/(d-i)*100}%;'></ha-icon>
       <hr class="progress-bar" />

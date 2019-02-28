@@ -6,7 +6,6 @@ import 'moment/min/locales';
 import { LitElement, html } from 'lit-element';
 import style from './style';
 
-
 /**
  * Creates an generalized Calendar Event to use when creating the calendar card
  * There can be Google Events and CalDav Events. This class normalizes those
@@ -135,6 +134,7 @@ class CalendarCard extends LitElement {
       progressBar: false,
       ...config,
     };
+
   }
 
   /**
@@ -263,15 +263,27 @@ class CalendarCard extends LitElement {
     // create overall card
     this.content = html`
       <ha-card class='calendar-card'>
-        <div class='header'>
-          ${this.config.title}
-        </div>
+        ${this.createHeader()}
         <table>
           <tbody>
             ${calendar}
           </tbody>
         </table>
       </ha-card>
+    `;
+  }
+
+  /**
+   * create card header
+   * @return {TemplateResult}
+   */
+  createHeader(){
+    if(this.config.title === false) return html``;
+
+    return html`
+      <div class='header'>
+        ${this.config.title}
+      </div>
     `;
   }
 
