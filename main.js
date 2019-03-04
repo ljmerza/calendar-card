@@ -198,8 +198,7 @@ class CalendarCard extends LitElement {
     // generate urls for calendars and get each calendar data
     const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
     const allResults = await this.getAllUrls(urls);
-    console.log({ allResults });
-    
+
     // convert each calendar object to a UI event
     const newEvents = [].concat(...allResults).map(event => new CalendarEvent(event));
 
@@ -242,7 +241,7 @@ class CalendarCard extends LitElement {
       const eventsTemplate = eventDay.events.map((event, index) => html`
           <tr class='day-wrapper ${eventDay.events.length === index + 1 ? 'day-wrapper-last' : ''}'>
             <td class="date">
-              ${this.getDateHtml(index,momentDay)}
+              ${this.getDateHtml(index, momentDay)}
             </td>
             <td class="overview" @click=${() => this.getLinkHtml(event)}>
               <div class="title">${event.title}</div>
@@ -280,8 +279,8 @@ class CalendarCard extends LitElement {
    * create card header
    * @return {TemplateResult}
    */
-  createHeader(){
-    if(this.config.title === false) return html``;
+  createHeader() {
+    if (this.config.title === false) return html``;
 
     return html`
       <div class='header'>
@@ -346,10 +345,10 @@ class CalendarCard extends LitElement {
 
   /**
    * generates HTML for showing date an event is taking place
-   * @param  {index,momentDay}
+   * @param {number} index index of current day event
+   * @param {Moment} momentDay
    */
-  getDateHtml(index,momentDay) {
-
+  getDateHtml(index, momentDay) {
     const top = index === 0 ? momentDay.format(this.config.dateTopFormat) : '';
     const bottom = index === 0 ? momentDay.format(this.config.dateBottomFormat) : '';
 
@@ -368,7 +367,7 @@ class CalendarCard extends LitElement {
    * @param {CalendarEvent} event
    */
   getTimeHtml(event) {
-    if(this.config.hideTime === true) return html``;
+    if (this.config.hideTime === true) return html``;
 
     if (event.isFullDayEvent) return html`<div class="time">All day</div>`;
 
