@@ -131,6 +131,9 @@ class CalendarCard extends LitElement {
       title: 'Calendar',
       numberOfDays: 7,
       timeFormat: 'HH:mm',
+      dateTopFormat: 'DD',
+      dateBottomFormat: 'ddd',
+      hideTime: false,
       progressBar: false,
       showLocation: false,
       ...config,
@@ -239,12 +242,11 @@ class CalendarCard extends LitElement {
       const eventsTemplate = eventDay.events.map((event, index) => html`
           <tr class='day-wrapper ${eventDay.events.length === index + 1 ? 'day-wrapper-last' : ''}'>
             <td class="date">
-              <div>${index === 0 ? momentDay.format('DD') : ''}</div>
-              <div>${index === 0 ? momentDay.format('ddd') : ''}</div>
+              ${this.getDateHtml(index,momentDay)}
             </td>
             <td class="overview" @click=${() => this.getLinkHtml(event)}>
               <div class="title">${event.title}</div>
-              <div class="time">${this.getTimeHtml(event)}</div>
+              ${this.getTimeHtml(event)}
               ${this.config.progressBar ? this.buildProgressBar(event) : ''}
             </td>
             <td class="location">
@@ -343,15 +345,36 @@ class CalendarCard extends LitElement {
   }
 
   /**
+   * generates HTML for showing date an event is taking place
+   * @param  {index,momentDay}
+   */
+  getDateHtml(index,momentDay) {
+
+    const top = index === 0 ? momentDay.format(this.config.dateTopFormat) : '';
+    const bottom = index === 0 ? momentDay.format(this.config.dateBottomFormat) : '';
+
+    return html`
+      <div>
+        ${top}
+      </div>
+      <div>
+        ${bottom}
+      </div>
+      `;
+  }
+
+  /**
    * generates HTML for showing an event times
    * @param {CalendarEvent} event
    */
   getTimeHtml(event) {
-    if (event.isFullDayEvent) return html`All day`;
+    if(this.config.hideTime === true) return html``;
+
+    if (event.isFullDayEvent) return html`<div class="time">All day</div>`;
 
     const start = moment(event.startDateTime).format(this.config.timeFormat);
     const end = moment(event.endDateTime).format(this.config.timeFormat);
-    return html`${start} - ${end}`;
+    return html`<div class="time">${start} - ${end}</div>`;
   }
 
   /**

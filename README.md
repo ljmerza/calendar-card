@@ -7,7 +7,7 @@
 <h2>Features</h2>
 
 * Show the next 5 events on your Google Calendar (default set by home assistant)
-* Set custom time format for each event
+* Set custom time and date format for each event
 * Click on event to open in your Google calendar app
 * Integrate multiple calendars
 * Update notifications via custom_updater
@@ -40,7 +40,10 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | entities | object | **Required** | List of calendars to display
 | timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
+| dateTopFormat | string | **Optional** | `DD` Format for top line of event date
+| dateBottomFormat | string | **Optional** | `ddd` Format to bottom line of event date
 | progressBar | boolean | **Optional** | `false` Adds progress bar to ongoing events
+| hideTime | boolean | **Optional** | `false` Hides event time section entirely
 | showLocation | boolean | **Optional** | `false` Shows location address
 
 <h2>Configuration</h2>
