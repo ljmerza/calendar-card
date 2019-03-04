@@ -70,6 +70,8 @@ const style = css`
 
     .day-wrapper .location a {
         text-decoration: none;
+        display: flex;
+        color: var(--accent-color);
     }
 `;
 
