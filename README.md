@@ -44,6 +44,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | dateBottomFormat | string | **Optional** | `ddd` Format to bottom line of event date
 | progressBar | boolean | **Optional** | `false` Adds progress bar to ongoing events
 | hideTime | boolean | **Optional** | `false` Hides event time section entirely
+| showLocation | boolean | **Optional** | `false` Shows location address
 
 <h2>Configuration</h2>
 Download `calendar-card.js` from the [latest release](https://github.com/ljmerza/calendar-card/releases/latest) and upload it your /www folder of your Home Assistant config directory.
@@ -62,7 +63,6 @@ Add the custom card to views:
 views:
   - type: custom:calendar-card
     title: "My Calendar"
-    numberOfDays: 14
     progressBar: true
     entities:
       - calendar.ljmerzagmailcom

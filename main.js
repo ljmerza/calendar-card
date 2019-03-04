@@ -135,9 +135,9 @@ class CalendarCard extends LitElement {
       dateBottomFormat: 'ddd',
       hideTime: false,
       progressBar: false,
+      showLocation: false,
       ...config,
     };
-
   }
 
   /**
@@ -198,7 +198,8 @@ class CalendarCard extends LitElement {
     // generate urls for calendars and get each calendar data
     const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
     const allResults = await this.getAllUrls(urls);
-
+    console.log({ allResults });
+    
     // convert each calendar object to a UI event
     const newEvents = [].concat(...allResults).map(event => new CalendarEvent(event));
 
@@ -387,7 +388,12 @@ class CalendarCard extends LitElement {
     return html`
       <a href="https://www.google.com/maps?daddr=${event.locationAddress}" target="_blank" rel="nofollow noreferrer noopener"
         title='open location'>
-        <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
+        <div>
+          <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
+        </div>  
+        <div>
+          ${this.config.showLocation ? event.location : ''}
+        </div>
       </a>
     `;
   }
