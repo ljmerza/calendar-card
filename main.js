@@ -136,6 +136,7 @@ class CalendarCard extends LitElement {
       hideTime: false,
       progressBar: false,
       showLocation: false,
+      showLocationIcon: true,
       ...config,
     };
   }
@@ -381,7 +382,7 @@ class CalendarCard extends LitElement {
    * @param {CalendarEvent} event
    */
   getLocationHtml(event) {
-    if (!event.location || !event.locationAddress)
+    if (!event.location || !event.locationAddress || !this.config.showLocationIcon)
       return html``;
 
     return html`
