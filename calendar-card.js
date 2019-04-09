@@ -455,7 +455,7 @@ window.JSCompiler_renameProperty=((e,t)=>e);const G={toAttribute(e,t){switch(t){
     .day-wrapper ha-icon.progress-bar {
         height: 12px;
         width: 12px;
-        color: var(--primary-color);
+        color: var(--accent-color);
     }
 
     .day-wrapper .location a {
