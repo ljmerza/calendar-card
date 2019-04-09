@@ -1,6 +1,6 @@
 {
     "name": "calendar-card",
-    "version": "3.5.0",
+    "version": "3.6.0",
     "description": "A calendar card for Home Assistant Lovelace UI",
     "keywords": [
         "home-assistant",
@@ -9,10 +9,8 @@
         "automation",
         "lovelace",
         "custom-cards",
-        "Google calendar"
+        "Google Calendar"
     ],
-    "main": "main.js",
-    "module": "main.js",
     "repository": "git@github.com:ljmerza/calendar-card.git",
     "author": "Leonardo Merza <ljmerza@gmail.com>",
     "license": "MIT",
@@ -21,19 +19,22 @@
         "moment": "^2.24.0"
     },
     "devDependencies": {
+        "@babel/cli": "^7.4.3",
+        "@babel/core": "^7.4.3",
+        "@babel/plugin-transform-modules-umd": "^7.2.0",
+        "@babel/polyfill": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
+        "babel-loader": "^8.0.5",
         "eslint": "^5.13.0",
         "eslint-config-airbnb-base": "^13.1.0",
         "eslint-plugin-import": "^2.16.0",
-        "rollup": "^0.66.6",
-        "rollup-plugin-commonjs": "^9.2.0",
-        "rollup-plugin-node-resolve": "^3.4.0",
-        "rollup-plugin-replace": "^2.1.0",
-        "rollup-plugin-terser": "^3.0.0"
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.3.0",
+        "webpack-merge": "^4.2.1"
     },
     "scripts": {
-        "build": "npm run lint && npm run rollup",
-        "rollup": "rollup -c",
-        "lint": "eslint main.js style.js",
-        "watch": "rollup -c --watch"
+        "lint": "eslint ./src",
+        "start": "webpack --watch --config webpack/config.dev.js",
+        "build": "webpack --config webpack/config.prod.js"
     }
 }

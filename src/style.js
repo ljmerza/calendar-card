@@ -54,7 +54,7 @@ const style = css`
 
     .day-wrapper hr.progress-bar {
         border-style: solid;
-        border-color: var(--secondary-color);
+        border-color: var(--accent-color);
         border-width: 1px 0 0 0;
         margin-top: -7px;
         margin-left: 0px;

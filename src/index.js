@@ -1,103 +1,16 @@
-
+import '@babel/polyfill';
 
 import moment from 'moment';
 import 'moment/min/locales';
 
 import { LitElement, html } from 'lit-element';
 import style from './style';
+import CalendarEvent from './calendar-event';
+import defaultConfig from './defaults';
 
-/**
- * Creates an generalized Calendar Event to use when creating the calendar card
- * There can be Google Events and CalDav Events. This class normalizes those
- */
-class CalendarEvent {
-  /**
-   * @param  {Object} calendarEvent
-   */
-  constructor(calendarEvent) {
-    this.calendarEvent = calendarEvent;
-  }
+import CalendarCardEditor from './index-editor';
+customElements.define('calendar-card-editor', CalendarCardEditor);
 
-  /**
-   * get the start time for an event
-   * @return {String}
-   */
-  get startDateTime() {
-    if (this.calendarEvent.start.date) {
-      const dateTime = moment(this.calendarEvent.start.date);
-      return dateTime.toISOString();
-    }
-
-    return this.calendarEvent.start && this.calendarEvent.start.dateTime || this.calendarEvent.start || '';
-  }
-
-  /**
-   * get the end time for an event
-   * @return {String}
-   */
-  get endDateTime() {
-    return this.calendarEvent.end && this.calendarEvent.end.dateTime || this.calendarEvent.end || '';
-  }
-
-  /**
-   * get the URL for an event
-   * @return {String}
-   */
-  get htmlLink() {
-    return this.calendarEvent.htmlLink || '';
-  }
-
-  /**
-   * get the title for an event
-   * @return {String}
-   */
-  get title() {
-    return this.calendarEvent.summary || this.calendarEvent.title || '';
-  }
-
-  /**
-   * get the description for an event
-   * @return {String}
-   */
-  get description() {
-    return this.calendarEvent.description;
-  }
-
-  /**
-   * parse location for an event
-   * @return {String}
-   */
-  get location() {
-    if (!this.calendarEvent.location) return '';
-    return this.calendarEvent.location.split(',')[0] || '';
-  }
-
-  /**
-   * get location address for an event
-   * @return {String}
-   */
-  get locationAddress() {
-    if (!this.calendarEvent.location) return '';
-
-    const address = this.calendarEvent.location.substring(this.calendarEvent.location.indexOf(',') + 1);
-    return address.split(' ').join('+');
-  }
-
-  /**
-   * is the event a full day event?
-   * @return {Boolean}
-   */
-  get isFullDayEvent() {
-    if (this.calendarEvent.start && this.calendarEvent.start.date) {
-      return this.calendarEvent.start.date;
-    }
-
-    const start = moment(this.startDateTime);
-    const end = moment(this.endDateTime);
-    const diffInHours = end.diff(start, 'hours');
-    return diffInHours >= 24;
-  }
-}
 
 class CalendarCard extends LitElement {
   static get properties() {
@@ -112,10 +25,12 @@ class CalendarCard extends LitElement {
     super();
 
     this.content = html``;
-    this.isSomethingChanged = true;
     this.events = null;
-    this.lastUpdate = null;
     this.isUpdating = false;
+  }
+
+  static async getConfigElement() {
+    return document.createElement("calendar-card-editor");
   }
 
   /**
@@ -127,18 +42,34 @@ class CalendarCard extends LitElement {
       throw new Error('You need to define at least one calendar entity via entities');
     }
 
+    // if the events lists have changed then we need to notify that eventsd need updating
+    const oldEvents = this.config && this.config.entities || [];
+    if (!this.config || !this.arraysEqual(oldEvents, config.entities) || config.numberOfDays !== this.config.numberOfDays) {
+      this.eventNeedUpdating = true;
+    }
+
     this.config = {
-      title: 'Calendar',
-      numberOfDays: 7,
-      timeFormat: 'HH:mm',
-      dateTopFormat: 'DD',
-      dateBottomFormat: 'ddd',
-      hideTime: false,
-      progressBar: false,
-      showLocation: false,
-      showLocationIcon: true,
+      ...defaultConfig,
       ...config,
     };
+  }
+
+  /**
+   * are two arrays equal?
+   * @param {*} a 
+   * @param {*} b 
+   * @return {boolean}
+   */
+  arraysEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
+
+    for (let i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+
+    return true;
   }
 
   /**
@@ -153,9 +84,6 @@ class CalendarCard extends LitElement {
     return style;
   }
 
-  updated() {
-    this.isSomethingChanged = false;
-  }
 
   render() {
     (async () => {
@@ -166,11 +94,6 @@ class CalendarCard extends LitElement {
 
       moment.locale(this.hass.language);
       const events = await this.getAllEvents(this.config.entities);
-
-      if (!this.isSomethingChanged) {
-        this.isUpdating = false;
-        return;
-      }
 
       await this.updateCard(events);
       this.isUpdating = false;
@@ -185,32 +108,32 @@ class CalendarCard extends LitElement {
    * @return {Promise<Array<CalendarEvent>>}
    */
   async getAllEvents(entities) {
-    // don't update if it's only been 15 min
-    if (this.lastUpdate && moment().diff(this.lastUpdate, 'minutes') <= 15) {
-      return this.events;
+    let newEvents = this.events || [];
+
+    // only update if we exclicitly asked for events updating or it's been 15 minutes
+    if (this.eventNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15){
+      // create url params
+      const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
+      const today = moment().startOf('day');
+      const start = today.format(dateFormat);
+      const end = today.add(this.config.numberOfDays, 'days').format(dateFormat);
+  
+      // generate urls for calendars and get each calendar data
+      const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
+      const allResults = await this.getAllUrls(urls);
+  
+      // convert each calendar object to a UI event
+      newEvents = [].concat(...allResults).map(event => new CalendarEvent(event));
+  
+      // sort events by date starting with soonest
+      newEvents.sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
+      
+      // save new events and update last updated
+      this.events = newEvents;
+      this.lastEventsUpdate = moment();
     }
 
-    // create url params
-    const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
-    const today = moment().startOf('day');
-    const start = today.format(dateFormat);
-    const end = today.add(this.config.numberOfDays, 'days').format(dateFormat);
-
-    // generate urls for calendars and get each calendar data
-    const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
-    const allResults = await this.getAllUrls(urls);
-
-    // convert each calendar object to a UI event
-    const newEvents = [].concat(...allResults).map(event => new CalendarEvent(event));
-
-    // sort events by date starting with soonest
-    newEvents.sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
-
-    // see if anything changed since last time, save events, and update last time we updated
-    this.isSomethingChanged = JSON.stringify(newEvents) !== JSON.stringify(this.events);
-    this.events = newEvents;
-    this.lastUpdate = moment();
-
+    this.eventNeedUpdating = false;
     return newEvents;
   }
 
@@ -240,11 +163,11 @@ class CalendarCard extends LitElement {
 
       // for each event in a day create template for that event
       const eventsTemplate = eventDay.events.map((event, index) => html`
-          <tr class='day-wrapper ${eventDay.events.length === index + 1 ? 'day-wrapper-last' : ''}'>
+          <tr class='day-wrapper ${eventDay.events.length === index + 1 ? ' day-wrapper-last' : '' }'>
             <td class="date">
               ${this.getDateHtml(index, momentDay)}
             </td>
-            <td class="overview" @click=${() => this.getLinkHtml(event)}>
+            <td class="overview" @click=${()=> this.getLinkHtml(event)}>
               <div class="title">${event.title}</div>
               ${this.getTimeHtml(event)}
               ${this.config.progressBar ? this.buildProgressBar(event) : ''}
@@ -309,7 +232,7 @@ class CalendarCard extends LitElement {
     const secondsPercent = (nowSeconds - startSeconds) / (endSeconds - startSeconds) * 100;
 
     return html`
-      <ha-icon icon="mdi:circle" class="progress-bar" style='margin-left:${secondsPercent}%;'></ha-icon>
+      <ha-icon icon="mdi:circle" class="progress-bar" style='margin-left:00000000000000000%;'></ha-icon>
       <hr class="progress-bar" />
     `;
   }
@@ -390,7 +313,7 @@ class CalendarCard extends LitElement {
         title='open location'>
         <div>
           <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
-        </div>  
+        </div>
         <div>
           ${this.config.showLocation ? event.location : ''}
         </div>
