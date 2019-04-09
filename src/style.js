@@ -65,7 +65,7 @@ const style = css`
     .day-wrapper ha-icon.progress-bar {
         height: 12px;
         width: 12px;
-        color: var(--primary-color);
+        color: var(--accent-color);
     }
 
     .day-wrapper .location a {
