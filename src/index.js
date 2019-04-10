@@ -1,4 +1,4 @@
-import '@babel/polyfill';
+import "core-js";
 
 import moment from 'moment';
 import 'moment/min/locales';
@@ -48,10 +48,7 @@ class CalendarCard extends LitElement {
       this.eventNeedUpdating = true;
     }
 
-    this.config = {
-      ...defaultConfig,
-      ...config,
-    };
+    this.config = Object.assign({}, defaultConfig, config);
   }
 
   /**

@@ -25,10 +25,7 @@ export default class CalendarCardEditor extends LitElement {
   }
 
   setConfig(config) {
-    this._config = {
-      ...defaultConfig, 
-      ...config
-    };
+    this._config = Object.assign({}, defaultConfig, config);
   }
 
   get entityOptions() {
@@ -139,17 +136,19 @@ export default class CalendarCardEditor extends LitElement {
     if (entityValue){
 
       if (checkedValue) {
-        this._config = { ...this._config, entities: [...this._config.entities, entityValue] };
+        const entities = Array.from(this._config.entities)
+        entities.push(entityValue)
+        this._config = Object.assign({}, this._config, { entities: entities });
       } else {
         const newEntities = this._config.entities.filter(entity => entity !== entityValue);
-        this._config = { ...this._config, entities: newEntities };
+        this._config = Object.assign({}, this._config, {entities: newEntities} );
       }
 
     } else if (checkedValue !== undefined || checkedValue !== null){
-      this._config = { ...this._config, [configValue]: checkedValue };
+      this._config = Object.assign({}, this._config, { [configValue]: checkedValue } );
 
     } else {
-      this._config = { ...this._config, [configValue]: value };
+      this._config = Object.assign({}, this._config, { [configValue]: value } );
     }
 
     console.log(this._config);

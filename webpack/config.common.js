@@ -1,15 +1,11 @@
 const path = require('path');
 
 
-const rootPath = path.resolve(__dirname, '../');
-
 module.exports = {
-    entry: {
-        "calendar-card": path.resolve(rootPath, './src/index.js'),
-    },
+    entry: ["./src/index.js"],
     output: {
-        filename: '[name].js',
-        path: rootPath,
+        filename: 'calendar-card.js',
+        path: path.resolve(__dirname, '../'),
     },
     module: {
         rules: [
@@ -17,33 +13,30 @@ module.exports = {
                 test: /\.m?js$/,
                 exclude: /(node_modules|bower_components)/,
                 include: [
-                    /node_modules(?:\/|\\)lit-element|lit-html|moment/
+                    /node_modules(?:\/|\\)lit-element|lit-html|moment|@babel\/polyfill/
                 ],
                 use: {
                     loader: 'babel-loader',
                     options: {
                         presets: [
-                            [
-                                require("@babel/preset-env").default,
-                                { modules: false },
-                            ],
+                            ["@babel/preset-env", {
+                                "modules": "commonjs",
+                                "targets": "> 0.25%, not dead",
+                            }],
+                            
                         ],
+                        "comments": false,
                         plugins: [
-                            [
-                                "@babel/plugin-proposal-object-rest-spread",
-                                { loose: true, useBuiltIns: true },
-                            ],
-                            [
-                                require("@babel/plugin-proposal-decorators").default,
-                                { decoratorsBeforeExport: true },
-                            ],
-                            [
-                                require("@babel/plugin-proposal-class-properties").default,
-                                { loose: true },
-                            ],
-                            ["@babel/plugin-transform-spread", {
+                            ["@babel/plugin-proposal-object-rest-spread"],
+                            ["@babel/plugin-transform-spread"],
+                            ["iife-wrap"],
+                            ["@babel/plugin-transform-template-literals"],
+                            ["@babel/plugin-proposal-decorators", {
+                                "legacy": true
+                            }],
+                            ["@babel/plugin-proposal-class-properties", {
                                 "loose": true
-                            }]
+                            }],
                         ],
                     },
                 },
