@@ -9,7 +9,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: rootPath
+        path: rootPath,
     },
     module: {
         rules: [
@@ -23,14 +23,31 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: [
-                            ["@babel/env"],
+                            [
+                                require("@babel/preset-env").default,
+                                { modules: false },
+                            ],
                         ],
                         plugins: [
-                            "@babel/plugin-transform-modules-umd"
-                        ]
-                    }
-                }
-            }
-        ]
-    }
+                            [
+                                "@babel/plugin-proposal-object-rest-spread",
+                                { loose: true, useBuiltIns: true },
+                            ],
+                            [
+                                require("@babel/plugin-proposal-decorators").default,
+                                { decoratorsBeforeExport: true },
+                            ],
+                            [
+                                require("@babel/plugin-proposal-class-properties").default,
+                                { loose: true },
+                            ],
+                            ["@babel/plugin-transform-spread", {
+                                "loose": true
+                            }]
+                        ],
+                    },
+                },
+            },
+        ],
+    },
 };
