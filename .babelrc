@@ -1,21 +1,28 @@
 {
   "presets": [
-    ["@babel/preset-env", {
-      "useBuiltIns": "usage",
-      "corejs": "3.0.0",
-      "targets": "> 0.25%, not dead",
-    }],
+    [
+      "@babel/preset-env", 
+      {
+        "useBuiltIns": "usage",
+        "corejs": "3.0.0",
+        "targets": "> 0.25%, not dead",
+      }
+    ],
     ["minify"]
   ],
   "comments": false,
   "plugins": [
-    ["@babel/plugin-proposal-decorators", { 
-      "legacy": true }
+    [
+      "@babel/plugin-proposal-decorators", 
+      { "legacy": true }
     ],
-    ["@babel/plugin-proposal-class-properties",{ 
-      "loose": true }
+    [
+      "@babel/plugin-proposal-class-properties",
+      { "loose": true }
     ],
-    ["@babel/plugin-transform-template-literals"],
+    [
+      "@babel/plugin-transform-template-literals"
+    ],
     [
       "@babel/plugin-syntax-dynamic-import"
     ],
