@@ -11,6 +11,8 @@
         "custom-cards",
         "Google Calendar"
     ],
+    "main": "src/index.js",
+    "module": "src/index.js",
     "repository": "git@github.com:ljmerza/calendar-card.git",
     "author": "Leonardo Merza <ljmerza@gmail.com>",
     "license": "MIT",
@@ -29,16 +31,23 @@
         "@babel/plugin-transform-template-literals": "^7.2.0",
         "@babel/preset-env": "^7.4.3",
         "babel-loader": "^8.0.5",
+        "babel-plugin-iife-wrap": "^1.1.0",
+        "babel-preset-minify": "^0.5.0",
         "eslint": "^5.13.0",
         "eslint-config-airbnb-base": "^13.1.0",
         "eslint-plugin-import": "^2.16.0",
+        "rollup": "^0.66.6",
+        "rollup-plugin-commonjs": "^9.3.4",
+        "rollup-plugin-node-resolve": "^3.4.0",
         "webpack": "^4.29.6",
         "webpack-cli": "^3.3.0",
         "webpack-merge": "^4.2.1"
     },
     "scripts": {
-        "lint": "eslint ./src",
-        "start": "webpack --watch --config webpack/config.dev.js",
-        "build": "webpack --config webpack/config.prod.js"
+        "build": "npm run rollup && npm run babel",
+        "rollup": "rollup -c",
+        "babel": "babel calendar-card.js --out-file calendar-card.js",
+        "lint": "eslint src/* --ext .js",
+        "watch": "rollup -c --watch"
     }
 }
