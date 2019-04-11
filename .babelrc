@@ -6,26 +6,11 @@
         "useBuiltIns": "usage",
         "corejs": "3.0.0",
         "targets": "> 0.25%, not dead",
+        "debug": true,
+        "modules": "systemjs"
       }
     ],
     ["minify"]
   ],
-  "comments": false,
-  "plugins": [
-    [
-      "@babel/plugin-proposal-decorators", 
-      { "legacy": true }
-    ],
-    [
-      "@babel/plugin-proposal-class-properties",
-      { "loose": true }
-    ],
-    [
-      "@babel/plugin-transform-template-literals"
-    ],
-    [
-      "@babel/plugin-syntax-dynamic-import"
-    ],
-    ["iife-wrap"],
-  ]
+  "comments": false
 }
