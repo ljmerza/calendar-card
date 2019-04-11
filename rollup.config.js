@@ -6,6 +6,7 @@ export default {
   output: {
     file: './calendar-card.js',
     format: 'umd',
+    name: 'CalendarCard'
   },
   plugins: [
     resolve(),
