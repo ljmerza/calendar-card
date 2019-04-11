@@ -1,16 +1,13 @@
 {
-  "presets": [
-    [
-      "@babel/preset-env", 
-      {
-        "useBuiltIns": "usage",
-        "corejs": "3.0.0",
-        "targets": "> 0.25%, not dead",
-        "debug": true,
-        "modules": "systemjs"
-      }
-    ],
-    ["minify"]
-  ],
-  "comments": false
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "useBuiltIns": "usage",
+                "debug": true,
+                "targets": "> 0.25%, not dead",
+                "shippedProposals": true
+            }
+        ]
+    ]
 }
