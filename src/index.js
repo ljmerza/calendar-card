@@ -1,4 +1,4 @@
-import moment from 'moment/src/moment';
+import moment from 'moment/min/moment-with-locales';
 
 import { LitElement, html } from 'lit-element';
 import style from './style';
