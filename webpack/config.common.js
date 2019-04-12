@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require("webpack");
 
 module.exports = {
     entry: './src/index.js',
@@ -11,12 +12,12 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: [
-                    /node_modules(?:\/|\\)lit-element|lit-html|moment/
+                    /node_modules(?:\/|\\)lit-element|lit-html/
                 ],
                 use: {
                     loader: 'babel-loader'
                 }
             }
         ]
-    }
+    },
 };
