@@ -7,6 +7,15 @@ const style = css`
         flex-direction: column;
     }
 
+    .loader {
+        width: 100%;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .header {
         font-family: var(--paper-font-headline_-_font-family);
         -webkit-font-smoothing: var(--paper-font-headline_-_-webkit-font-smoothing);

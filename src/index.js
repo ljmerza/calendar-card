@@ -35,12 +35,12 @@ class CalendarCard extends LitElement {
    * @param {[type]} config
    */
   setConfig(config) {
-    if (!config.entities) {
+    if (!config.entities || !config.entities.length) {
       throw new Error('You need to define at least one calendar entity via entities');
     }
 
-    // if the events lists have changed then we need to notify that eventsd need updating
     const oldEvents = this.config && this.config.entities || [];
+    // if the events lists have changed then we need to notify that eventsd need updating
     if (!this.config || !this.arraysEqual(oldEvents, config.entities) || config.numberOfDays !== this.config.numberOfDays) {
       this.eventNeedUpdating = true;
     }
@@ -106,6 +106,8 @@ class CalendarCard extends LitElement {
 
     // only update if we exclicitly asked for events updating or it's been 15 minutes
     if (this.eventNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15){
+      this.setLoadingUi();
+      
       // create url params
       const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
       const today = moment().startOf('day');
@@ -114,7 +116,7 @@ class CalendarCard extends LitElement {
   
       // generate urls for calendars and get each calendar data
       const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
-      const allResults = await this.getAllUrls(urls);
+      const allResults = await Promise.all(urls.map(url => this.__hass.callApi('get', url)));
   
       // convert each calendar object to a UI event
       newEvents = [].concat(...allResults).map(event => new CalendarEvent(event));
@@ -132,16 +134,17 @@ class CalendarCard extends LitElement {
   }
 
   /**
-   * given a list of urls get the data from them
-   * @param  {Array<string>} urls
-   * @return {Promise<Array<Object>>}
+   * sets loading screen
    */
-  async getAllUrls(urls) {
-    try {
-      return await Promise.all(urls.map(url => this.__hass.callApi('get', url)));
-    } catch (error) {
-      throw error;
-    }
+  setLoadingUi(){
+    this.content = html`
+      <ha-card class='calendar-card'>
+        ${this.createHeader()}
+        <div class='loader'>
+          <paper-spinner active></paper-spinner>
+        </div>
+        </ha-card>
+    `;
   }
 
   /**
@@ -178,7 +181,6 @@ class CalendarCard extends LitElement {
         ${eventsTemplate}
       `;
     }, html``);
-
 
     // create overall card
     this.content = html`
