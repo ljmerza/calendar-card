@@ -13,17 +13,24 @@ export default class CalendarEvent {
         this.calendarEvent = calendarEvent;
     }
 
+    get rawEvent(){
+        return this.calendarEvent;
+    }
+
     /**
      * get the start time for an event
      * @return {String}
      */
     get startDateTime() {
-        if (this.calendarEvent.start.date) {
-            const dateTime = moment(this.calendarEvent.start.date);
-            return dateTime.toISOString();
+        if (this._startDateTime === undefined){
+            const date = this.calendarEvent.start && this.calendarEvent.start.date || this.calendarEvent.start.dateTime || this.calendarEvent.start || '';
+            this._startDateTime =  this._processDate(date);
         }
+        return this._startDateTime;
+    }
 
-        return this.calendarEvent.start && this.calendarEvent.start.dateTime || this.calendarEvent.start || '';
+    set startDateTime(time=''){
+        this._startDateTime = time;
     }
 
     /**
@@ -31,7 +38,28 @@ export default class CalendarEvent {
      * @return {String}
      */
     get endDateTime() {
-        return this.calendarEvent.end && this.calendarEvent.end.dateTime || this.calendarEvent.end || '';
+        if (this._endDateTime === undefined) {
+            const date = this.calendarEvent.end && this.calendarEvent.end.date || this.calendarEvent.end.dateTime || this.calendarEvent.end;
+            this._endDateTime = this._processDate(date);
+        }
+        return this._endDateTime;
+    }
+
+    set endDateTime(time = '') {
+        this._endDateTime = time;
+    }
+
+    /**
+     * 
+     * @param {*} date 
+     */
+    _processDate(date){
+        if (date) {
+            date = moment(date);
+            if (this.calendarEvent.addDays) date = date.add(this.calendarEvent.addDays, 'days');
+        }
+
+        return date;
     }
 
     /**
@@ -40,6 +68,15 @@ export default class CalendarEvent {
      */
     get htmlLink() {
         return this.calendarEvent.htmlLink || '';
+    }
+
+    /**
+     * is a multiday event (not all day)
+     * @return {Boolean}
+     */
+    get isMultiDay() {
+        return this.startDateTime.date() !== this.endDateTime.date() 
+            && (this.startDateTime.hour() && this.endDateTime.hour());
     }
 
     /**
@@ -87,9 +124,16 @@ export default class CalendarEvent {
             return this.calendarEvent.start.date;
         }
 
-        const start = moment(this.startDateTime);
-        const end = moment(this.endDateTime);
-        const diffInHours = end.diff(start, 'hours');
-        return diffInHours >= 24;
+        if (this._isFullDayEvent === undefined){
+            const start = moment(this.startDateTime);
+            const end = moment(this.endDateTime);
+            const diffInHours = end.diff(start, 'hours');
+            return diffInHours >= 24;
+        }
+        return this._isFullDayEvent;
+    }
+
+    set isFullDayEvent(isFull=false){
+        this._isFullDayEvent = isFull;
     }
 }

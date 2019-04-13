@@ -10,4 +10,5 @@ export default {
     progressBar: false,
     showLocation: false,
     showLocationIcon: true,
+    showMultiDay: false,
 };

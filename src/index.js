@@ -109,13 +109,50 @@ class CalendarCard extends LitElement {
     const allResults = await Promise.all(urls.map(url => this.__hass.callApi('get', url)));
 
     // convert each calendar object to a UI event
-    let newEvents = [].concat(...allResults).map(event => new CalendarEvent(event));
+    let newEvents = [].concat(...allResults).reduce((events, event) => {
+      let newEvent = new CalendarEvent(event);
+
+      /**
+       * if we want to split multi day events and its a multi day event then 
+       * get how long then event is and for each day
+       * copy the event, add # of days to start/end time for each event 
+       * then add as 'new' event
+       */
+      if (this.config.showMultiDay && newEvent.isMultiDay){
+        const daysLong = (newEvent.endDateTime.diff(newEvent.startDate, 'days') + 2);
+        const partialEvents = [];
+
+        for (let i=0; i < daysLong; i++){
+          const copiedEvent = JSON.parse(JSON.stringify(newEvent.rawEvent));
+          copiedEvent.addDays = i;
+          copiedEvent.summary += ` (${i + 1}/${daysLong})`;
+          const partialEvent = new CalendarEvent(copiedEvent);
+
+          // mark first and last day to remove times later on
+          if (i == 0) {
+            partialEvent.isFirstDay = true;
+            partialEvent.isFullDayEvent = false;
+          } else if (i === daysLong-1) {
+            partialEvent.isLastDay = true;
+            partialEvent.isFullDayEvent = false;
+          }
+          partialEvents.push(partialEvent)
+        }
+
+        console.log({ partialEvents });
+        events = events.concat(partialEvents);
+
+      } else {
+        // else just push normal event
+        events.push(newEvent)
+      }
+
+      return events;
+    }, []);
 
     // sort events by date starting with soonest
-    newEvents.sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
-    console.log({ newEvents });
-    
-    
+    newEvents.sort((a, b) => a.startDateTime.isBefore(b.startDateTime) ? -1 : 1);
+
     this.lastEventsUpdate = moment();
     this.eventNeedUpdating = false;
     return newEvents;
@@ -191,17 +228,19 @@ class CalendarCard extends LitElement {
     if (!event.startDateTime || !event.endDateTime || event.isFullDayEvent) return html``;
 
     const now = moment(new Date());
-    const start = moment(event.startDateTime);
-    const end = moment(event.endDateTime);
-    if (now.isBefore(start) || now.isSameOrAfter(end) || !start.isValid() || !end.isValid()) return html``;
+    if (now.isBefore(event.startDateTime) || now.isSameOrAfter(event.endDateTime) || !event.startDateTime.isValid() || !event.endDateTime.isValid()) return html``;
 
     const nowSeconds = now.unix();
-    const startSeconds = start.unix();
-    const endSeconds = end.unix();
+    const startSeconds = event.startDateTime.unix();
+    const endSeconds = event.endDateTime.unix();
     const secondsPercent = (nowSeconds - startSeconds) / (endSeconds - startSeconds) * 100;
 
     return html`
-      <ha-icon icon="mdi:circle" class="progress-bar" style='margin-left:00000000000000000%;'></ha-icon>
+      <ha-icon 
+        icon="mdi:circle" 
+        style='margin-left:${secondsPercent}%;'
+        class="progress-bar" 
+      ></ha-icon>
       <hr class="progress-bar" />
     `;
   }
@@ -264,9 +303,10 @@ class CalendarCard extends LitElement {
 
     if (event.isFullDayEvent) return html`<div class="time">All day</div>`;
 
-    const start = moment(event.startDateTime).format(this.config.timeFormat);
-    const end = moment(event.endDateTime).format(this.config.timeFormat);
-    return html`<div class="time">${start} - ${end}</div>`;
+    const start = event.startDateTime && event.startDateTime.format(this.config.timeFormat);
+    const end = event.endDateTime && event.endDateTime.format(this.config.timeFormat);
+    const date = (event.isFirstDay && `Start:${start}`) || (event.isLastDay && `End:${end}`) || (start && end  && `${start} - ${end}`) || '';
+    return html`<div class="time">${date}</div>`;
   }
 
   /**

@@ -18,6 +18,7 @@
 * Click on event location to open maps app
 * Language support
 * Progress bar for ongoing events
+* Split multiday events
 
 ## Track Updates
 
@@ -50,6 +51,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | hideTime | boolean | **Optional** | `false` Hides event time section entirely
 | showLocation | boolean | **Optional** | `false` Shows location address
 | showLocationIcon | boolean | **Optional** | `true` Shows map icon when event has a location
+| showMultiDay | boolean | **Optional** | `false` Split multiday events into per day
 
 ## Configuration
 Download `calendar-card.js` from the [latest release](https://github.com/ljmerza/calendar-card/releases/latest) and upload it your /www folder of your Home Assistant config directory.
