@@ -14,16 +14,7 @@ class CalendarCard extends LitElement {
     return {
       hass: Object,
       config: Object,
-      content: Object,
     };
-  }
-
-  constructor() {
-    super();
-
-    this.content = html``;
-    this.events = null;
-    this.isUpdating = false;
   }
 
   static async getConfigElement() {
@@ -80,20 +71,24 @@ class CalendarCard extends LitElement {
 
 
   render() {
-    (async () => {
-      // since this is async then we need to know
-      // when we are updating outisde the LitElement hooks
-      if (this.isUpdating) return;
-      this.isUpdating = true;
+    if (this.eventNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15) {
+      (async () => {
+        moment.locale(this.hass.language);
+        const events = await this.getAllEvents(this.config.entities);
+        await this.updateCard(events);
+      })();
+    }
 
-      moment.locale(this.hass.language);
-      const events = await this.getAllEvents(this.config.entities);
-
-      await this.updateCard(events);
-      this.isUpdating = false;
-    })();
-
-    return this.content;
+    return html`
+      <ha-card class='calendar-card'>
+        ${this.createHeader()}
+        ${this.content ? html`${this.content}`
+          : html`<div class='loader'>
+            <paper-spinner active></paper-spinner>
+          </div>`
+        }
+      </ha-card>
+    `;
   }
 
   /**
@@ -102,49 +97,26 @@ class CalendarCard extends LitElement {
    * @return {Promise<Array<CalendarEvent>>}
    */
   async getAllEvents(entities) {
-    let newEvents = this.events || [];
+    
+    // create url params
+    const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
+    const today = moment().startOf('day');
+    const start = today.format(dateFormat);
+    const end = today.add(this.config.numberOfDays, 'days').format(dateFormat);
 
-    // only update if we exclicitly asked for events updating or it's been 15 minutes
-    if (this.eventNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15){
-      this.setLoadingUi();
-      
-      // create url params
-      const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
-      const today = moment().startOf('day');
-      const start = today.format(dateFormat);
-      const end = today.add(this.config.numberOfDays, 'days').format(dateFormat);
-  
-      // generate urls for calendars and get each calendar data
-      const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
-      const allResults = await Promise.all(urls.map(url => this.__hass.callApi('get', url)));
-  
-      // convert each calendar object to a UI event
-      newEvents = [].concat(...allResults).map(event => new CalendarEvent(event));
-  
-      // sort events by date starting with soonest
-      newEvents.sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
-      
-      // save new events and update last updated
-      this.events = newEvents;
-      this.lastEventsUpdate = moment();
-    }
+    // generate urls for calendars and get each calendar data
+    const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
+    const allResults = await Promise.all(urls.map(url => this.__hass.callApi('get', url)));
 
+    // convert each calendar object to a UI event
+    let newEvents = [].concat(...allResults).map(event => new CalendarEvent(event));
+
+    // sort events by date starting with soonest
+    newEvents.sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
+    
+    this.lastEventsUpdate = moment();
     this.eventNeedUpdating = false;
     return newEvents;
-  }
-
-  /**
-   * sets loading screen
-   */
-  setLoadingUi(){
-    this.content = html`
-      <ha-card class='calendar-card'>
-        ${this.createHeader()}
-        <div class='loader'>
-          <paper-spinner active></paper-spinner>
-        </div>
-        </ha-card>
-    `;
   }
 
   /**
@@ -175,24 +147,23 @@ class CalendarCard extends LitElement {
           </tr>
         `);
 
-      // add day template
+      // add a day's template
       return html`
         ${htmlTemplate}
         ${eventsTemplate}
       `;
     }, html``);
 
-    // create overall card
+
     this.content = html`
-      <ha-card class='calendar-card'>
-        ${this.createHeader()}
-        <table>
-          <tbody>
-            ${calendar}
-          </tbody>
-        </table>
-      </ha-card>
+      <table>
+        <tbody>
+          ${calendar}
+        </tbody>
+      </table>
     `;
+
+    this.requestUpdate();
   }
 
   /**
