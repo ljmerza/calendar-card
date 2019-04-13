@@ -139,7 +139,6 @@ class CalendarCard extends LitElement {
           partialEvents.push(partialEvent)
         }
 
-        console.log({ partialEvents });
         events = events.concat(partialEvents);
 
       } else {
