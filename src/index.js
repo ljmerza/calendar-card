@@ -113,6 +113,8 @@ class CalendarCard extends LitElement {
 
     // sort events by date starting with soonest
     newEvents.sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
+    console.log({ newEvents });
+    
     
     this.lastEventsUpdate = moment();
     this.eventNeedUpdating = false;
