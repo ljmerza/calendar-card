@@ -13,6 +13,10 @@ export default class CalendarEvent {
         this.calendarEvent = calendarEvent;
     }
 
+    get id(){
+        return this.calendarEvent.id + this.title;
+    }
+
     get rawEvent(){
         return this.calendarEvent;
     }
@@ -84,7 +88,11 @@ export default class CalendarEvent {
      * @return {String}
      */
     get title() {
-        return this.calendarEvent.summary || this.calendarEvent.title || '';
+        let title = (this.calendarEvent.summary || this.calendarEvent.title || '');
+        if (this.calendarEvent.daysLong){
+            title += ` (${this.calendarEvent.addDays + 1}/${this.calendarEvent.daysLong})`;
+        }
+        return title;
     }
 
     /**

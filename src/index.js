@@ -1,6 +1,8 @@
 import moment from 'moment/min/moment-with-locales';
 import { LitElement, html } from 'lit-element';
 import { cache } from 'lit-html/directives/cache.js';
+import { repeat } from 'lit-html/directives/repeat';
+import { asyncReplace } from 'lit-html/directives/async-replace.js';
 
 import style from './style';
 import CalendarEvent from './calendar-event';
@@ -34,7 +36,7 @@ class CalendarCard extends LitElement {
     const oldEvents = this.config && this.config.entities || [];
     // if the events lists have changed then we need to notify that eventsd need updating
     if (!this.config || !this.arraysEqual(oldEvents, config.entities) || config.numberOfDays !== this.config.numberOfDays) {
-      this.eventNeedUpdating = true;
+      this.eventsNeedUpdating = true;
     }
 
     this.config = Object.assign({}, defaultConfig, config);
@@ -70,36 +72,77 @@ class CalendarCard extends LitElement {
     return style;
   }
 
+  shouldUpdate() {
+    return this.eventsNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15;
+  }
 
   render() {
-    if (this.eventNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15) {
-      (async () => {
-        moment.locale(this.hass.language);
-        const events = await this.getAllEvents(this.config.entities);
-        await this.updateCard(events);
-      })();
-    }
-
     return html`
       <ha-card class='calendar-card'>
         ${this.createHeader()}
-        ${cache(this.content 
-          ? html`${this.content}`
-          : html`<div class='loader'>
-            <paper-spinner active></paper-spinner>
-          </div>`)
-        }
+        ${asyncReplace(this.updateCard())}
       </ha-card>
     `;
   }
 
   /**
+   * updates the entire card
+   * @return {TemplateResult}
+   */
+  async* updateCard() {
+    yield html`
+      <div class='loader'>
+        <paper-spinner active></paper-spinner>
+      </div>
+    `;
+
+    moment.locale(this.hass.language);
+    const events = await this.getAllEvents();
+    const groupedEventsByDay = this.groupEventsByDay(events);
+
+    const calendar = groupedEventsByDay.reduce((htmlTemplate, eventDay) => {
+      const momentDay = moment(eventDay.day);
+
+      // for each event in a day create template for that event
+      const eventsTemplate = repeat(eventDay.events, event => event.id, (event, index) => html`
+          <tr class='day-wrapper ${eventDay.events.length === index + 1 ? ' day-wrapper-last' : '' }'>
+            <td class="date">
+              ${this.getDateHtml(index, momentDay)}
+            </td>
+            <td class="overview" @click=${()=> this.getLinkHtml(event)}>
+              <div class="title">${event.title}</div>
+              ${this.getTimeHtml(event)}
+              ${this.config.progressBar ? this.buildProgressBar(event) : ''}
+            </td>
+            <td class="location">
+              ${this.getLocationHtml(event)}
+            </td>
+          </tr>
+        `);
+
+      return html`
+        ${htmlTemplate}
+        ${eventsTemplate}
+      `;
+    }, html``);
+
+    this.eventsNeedUpdating = false;
+
+    yield html`
+      <table>
+        <tbody>
+          ${calendar}
+        </tbody>
+      </table>
+    `;
+  }
+
+  /**
    * gets all events for all calendars added to this card's config
-   * @param  {CalendarEntity[]} entities
    * @return {Promise<Array<CalendarEvent>>}
    */
-  async getAllEvents(entities) {
-    
+  async getAllEvents() {
+
     // create url params
     const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
     const today = moment().startOf('day');
@@ -107,7 +150,7 @@ class CalendarCard extends LitElement {
     const end = today.add(this.config.numberOfDays, 'days').format(dateFormat);
 
     // generate urls for calendars and get each calendar data
-    const urls = entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
+    const urls = this.config.entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
     const allResults = await Promise.all(urls.map(url => this.__hass.callApi('get', url)));
 
     // convert each calendar object to a UI event
@@ -120,21 +163,23 @@ class CalendarCard extends LitElement {
        * copy the event, add # of days to start/end time for each event 
        * then add as 'new' event
        */
-      if (this.config.showMultiDay && newEvent.isMultiDay){
+      if (this.config.showMultiDay && newEvent.isMultiDay) {
         const daysLong = (newEvent.endDateTime.diff(newEvent.startDate, 'days') + 2);
         const partialEvents = [];
 
-        for (let i=0; i < daysLong; i++){
+        for (let i = 0; i < daysLong; i++) {
+
+          // copy event then add the current day/total days to 'new' event
           const copiedEvent = JSON.parse(JSON.stringify(newEvent.rawEvent));
           copiedEvent.addDays = i;
-          copiedEvent.summary += ` (${i + 1}/${daysLong})`;
+          copiedEvent.daysLong = daysLong;
           const partialEvent = new CalendarEvent(copiedEvent);
 
           // mark first and last day to remove times later on
           if (i == 0) {
             partialEvent.isFirstDay = true;
             partialEvent.isFullDayEvent = false;
-          } else if (i === daysLong-1) {
+          } else if (i === daysLong - 1) {
             partialEvent.isLastDay = true;
             partialEvent.isFullDayEvent = false;
           }
@@ -157,53 +202,6 @@ class CalendarCard extends LitElement {
     this.lastEventsUpdate = moment();
     this.eventNeedUpdating = false;
     return newEvents;
-  }
-
-  /**
-   * updates the entire card if we need to
-   * @param  {Array<CalendarEvent>} eventList
-   * @return {TemplateResult}
-   */
-  updateCard(eventList) {
-    const groupedEventsByDay = this.groupEventsByDay(eventList);
-
-    const calendar = groupedEventsByDay.reduce((htmlTemplate, eventDay) => {
-      const momentDay = moment(eventDay.day);
-
-      // for each event in a day create template for that event
-      const eventsTemplate = eventDay.events.map((event, index) => html`
-          <tr class='day-wrapper ${eventDay.events.length === index + 1 ? ' day-wrapper-last' : '' }'>
-            <td class="date">
-              ${this.getDateHtml(index, momentDay)}
-            </td>
-            <td class="overview" @click=${()=> this.getLinkHtml(event)}>
-              <div class="title">${event.title}</div>
-              ${this.getTimeHtml(event)}
-              ${this.config.progressBar ? this.buildProgressBar(event) : ''}
-            </td>
-            <td class="location">
-              ${this.getLocationHtml(event)}
-            </td>
-          </tr>
-        `);
-
-      // add a day's template
-      return html`
-        ${htmlTemplate}
-        ${eventsTemplate}
-      `;
-    }, html``);
-
-
-    this.content = html`
-      <table>
-        <tbody>
-          ${calendar}
-        </tbody>
-      </table>
-    `;
-
-    this.requestUpdate();
   }
 
   /**
