@@ -1,8 +1,7 @@
 import moment from 'moment/min/moment-with-locales';
 import { LitElement, html } from 'lit-element';
-import { cache } from 'lit-html/directives/cache.js';
 import { repeat } from 'lit-html/directives/repeat';
-import { asyncReplace } from 'lit-html/directives/async-replace.js';
+import { until } from 'lit-html/directives/until.js';
 
 import style from './style';
 import CalendarEvent from './calendar-event';
@@ -80,7 +79,11 @@ class CalendarCard extends LitElement {
     return html`
       <ha-card class='calendar-card'>
         ${this.createHeader()}
-        ${asyncReplace(this.updateCard())}
+        ${until(this.updateCard(), html`
+          <div class='loader'>
+            <paper-spinner active></paper-spinner>
+          </div>
+        `)}
       </ha-card>
     `;
   }
@@ -89,13 +92,7 @@ class CalendarCard extends LitElement {
    * updates the entire card
    * @return {TemplateResult}
    */
-  async* updateCard() {
-    yield html`
-      <div class='loader'>
-        <paper-spinner active></paper-spinner>
-      </div>
-    `;
-
+  async updateCard() {
     moment.locale(this.hass.language);
     const events = await this.getAllEvents();
     const groupedEventsByDay = this.groupEventsByDay(events);
@@ -128,7 +125,7 @@ class CalendarCard extends LitElement {
 
     this.eventsNeedUpdating = false;
 
-    yield html`
+    return html`
       <table>
         <tbody>
           ${calendar}
