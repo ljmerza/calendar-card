@@ -1,6 +1,7 @@
 import moment from 'moment/min/moment-with-locales';
-
 import { LitElement, html } from 'lit-element';
+import { cache } from 'lit-html/directives/cache.js';
+
 import style from './style';
 import CalendarEvent from './calendar-event';
 import defaultConfig from './defaults';
@@ -82,10 +83,11 @@ class CalendarCard extends LitElement {
     return html`
       <ha-card class='calendar-card'>
         ${this.createHeader()}
-        ${this.content ? html`${this.content}`
+        ${cache(this.content 
+          ? html`${this.content}`
           : html`<div class='loader'>
             <paper-spinner active></paper-spinner>
-          </div>`
+          </div>`)
         }
       </ha-card>
     `;
