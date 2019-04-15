@@ -161,7 +161,7 @@ class CalendarCard extends LitElement {
        * then add as 'new' event
        */
       if (this.config.showMultiDay && newEvent.isMultiDay) {
-        const daysLong = (newEvent.endDateTime.diff(newEvent.startDate, 'days') + 2);
+        const daysLong = (newEvent.endDateTime.diff(newEvent.startDateTime, 'days') + 1);
         const partialEvents = [];
 
         for (let i = 0; i < daysLong; i++) {
@@ -170,16 +170,8 @@ class CalendarCard extends LitElement {
           const copiedEvent = JSON.parse(JSON.stringify(newEvent.rawEvent));
           copiedEvent.addDays = i;
           copiedEvent.daysLong = daysLong;
-          const partialEvent = new CalendarEvent(copiedEvent);
 
-          // mark first and last day to remove times later on
-          if (i == 0) {
-            partialEvent.isFirstDay = true;
-            partialEvent.isFullDayEvent = false;
-          } else if (i === daysLong - 1) {
-            partialEvent.isLastDay = true;
-            partialEvent.isFullDayEvent = false;
-          }
+          const partialEvent = new CalendarEvent(copiedEvent);
           partialEvents.push(partialEvent)
         }
 

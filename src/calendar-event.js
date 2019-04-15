@@ -33,10 +33,6 @@ export default class CalendarEvent {
         return this._startDateTime;
     }
 
-    set startDateTime(time=''){
-        this._startDateTime = time;
-    }
-
     /**
      * get the end time for an event
      * @return {String}
@@ -44,23 +40,49 @@ export default class CalendarEvent {
     get endDateTime() {
         if (this._endDateTime === undefined) {
             const date = this.calendarEvent.end && this.calendarEvent.end.date || this.calendarEvent.end.dateTime || this.calendarEvent.end;
-            this._endDateTime = this._processDate(date);
+            this._endDateTime = this._processDate(date, true);
         }
         return this._endDateTime;
     }
 
-    set endDateTime(time = '') {
-        this._endDateTime = time;
+    get addDays(){
+        return this.calendarEvent.addDays !== undefined ? this.calendarEvent.addDays : false;
+    }
+
+    get daysLong() {
+        return this.calendarEvent.daysLong;
+    }
+
+    get isFirstDay(){
+        return this.calendarEvent.addDays === 0;
+    }
+
+    get isLastDay(){
+        return this.calendarEvent.addDays === (this.calendarEvent.daysLong - 1);
     }
 
     /**
      * 
-     * @param {*} date 
+     * @param {string} date
+     * @param {boolean} isEndDate
      */
-    _processDate(date){
+    _processDate(date, isEndDate=false){
         if (date) {
             date = moment(date);
-            if (this.calendarEvent.addDays) date = date.add(this.calendarEvent.addDays, 'days');
+
+            // add days to a start date for multi day event
+            if (this.addDays !== false) {
+                if (!isEndDate && this.addDays) date = date.add(this.addDays, 'days');
+
+                // if first day and end time then set to end of current event day that day
+                if (this.isFirstDay && isEndDate) {
+                    date = moment(this.startDateTime).endOf('day');
+
+                } else if (this.isLastDay && !isEndDate) {
+                    // if last day and start time then set start as start of day
+                    date = date.startOf('day');
+                }
+            }
         }
 
         return date;
@@ -90,7 +112,7 @@ export default class CalendarEvent {
     get title() {
         let title = (this.calendarEvent.summary || this.calendarEvent.title || '');
         if (this.calendarEvent.daysLong){
-            title += ` (${this.calendarEvent.addDays + 1}/${this.calendarEvent.daysLong})`;
+            title += ` (${this.addDays + 1}/${this.daysLong})`;
         }
         return title;
     }
@@ -128,6 +150,15 @@ export default class CalendarEvent {
      * @return {Boolean}
      */
     get isFullDayEvent() {
+        // if multi day but not end nor startday then is a `full day`
+        if (this.addDays && !this.isFirstDay && !this.isLastDay){
+            return true;
+
+        } else if (this.addDays !== false) {
+            // if we are a multi day but IS first or last then we know it's not all day
+            return false;
+        }
+
         if (this.calendarEvent.start && this.calendarEvent.start.date) {
             return this.calendarEvent.start.date;
         }
