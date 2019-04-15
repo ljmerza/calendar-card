@@ -79,6 +79,14 @@ export default class CalendarCardEditor extends LitElement {
             >Show Location Icon</paper-checkbox>
           </div>
 
+          <div class='checkbox-options'>
+            <paper-checkbox
+              @checked-changed="${this._valueChanged}" 
+              .checked=${this._config.showMultiDay}
+              .configValue="${"showMultiDay"}"
+            >Show MultDay</paper-checkbox>
+          </div>
+
           <div class='other-options'>
             <paper-input
               label="Number Of Days"

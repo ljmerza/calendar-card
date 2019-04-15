@@ -5440,7 +5440,7 @@ UpdatingElement.finalized = true;
 /*!*************************************************!*\
   !*** ./node_modules/lit-element/lit-element.js ***!
   \*************************************************/
-/*! exports provided: defaultConverter, notEqual, UpdatingElement, customElement, property, query, queryAll, eventOptions, html, svg, TemplateResult, SVGTemplateResult, supportsAdoptingStyleSheets, CSSResult, unsafeCSS, css, LitElement */
+/*! exports provided: html, svg, TemplateResult, SVGTemplateResult, LitElement, defaultConverter, notEqual, UpdatingElement, customElement, property, query, queryAll, eventOptions, supportsAdoptingStyleSheets, CSSResult, unsafeCSS, css */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -31944,6 +31944,14 @@ class CalendarCardEditor extends lit_element__WEBPACK_IMPORTED_MODULE_0__["LitEl
               .checked=${this._config.showLocationIcon}
               .configValue="${"showLocationIcon"}"
             >Show Location Icon</paper-checkbox>
+          </div>
+
+          <div class='checkbox-options'>
+            <paper-checkbox
+              @checked-changed="${this._valueChanged}" 
+              .checked=${this._config.showMultiDay}
+              .configValue="${"showMultiDay"}"
+            >Show MultDay</paper-checkbox>
           </div>
 
           <div class='other-options'>
