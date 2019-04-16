@@ -170,7 +170,7 @@ class CalendarCard extends LitElement {
           const copiedEvent = JSON.parse(JSON.stringify(newEvent.rawEvent));
           copiedEvent.addDays = i;
           copiedEvent.daysLong = daysLong;
-
+          
           const partialEvent = new CalendarEvent(copiedEvent);
           partialEvents.push(partialEvent)
         }
@@ -213,7 +213,7 @@ class CalendarCard extends LitElement {
    * @return {TemplateResult}
    */
   buildProgressBar(event) {
-    if (!event.startDateTime || !event.endDateTime || event.isFullDayEvent) return html``;
+    if (!event.startDateTime || !event.endDateTime || event.isAllDayEvent) return html``;
 
     const now = moment(new Date());
     if (now.isBefore(event.startDateTime) || now.isSameOrAfter(event.endDateTime) || !event.startDateTime.isValid() || !event.endDateTime.isValid()) return html``;
@@ -289,7 +289,7 @@ class CalendarCard extends LitElement {
   getTimeHtml(event) {
     if (this.config.hideTime === true) return html``;
 
-    if (event.isFullDayEvent) return html`<div class="time">All day</div>`;
+    if (event.isAllDayEvent) return html`<div class="time">All day</div>`;
 
     const start = event.startDateTime && event.startDateTime.format(this.config.timeFormat);
     const end = event.endDateTime && event.endDateTime.format(this.config.timeFormat);

@@ -69,7 +69,6 @@ export default class CalendarEvent {
     _processDate(date, isEndDate=false){
         if (date) {
             date = moment(date);
-
             // add days to a start date for multi day event
             if (this.addDays !== false) {
                 if (!isEndDate && this.addDays) date = date.add(this.addDays, 'days');
@@ -101,8 +100,8 @@ export default class CalendarEvent {
      * @return {Boolean}
      */
     get isMultiDay() {
-        return this.startDateTime.date() !== this.endDateTime.date() 
-            && (this.startDateTime.hour() && this.endDateTime.hour());
+        if (this.endDateTime.diff(this.startDateTime, 'hours') <= 24 && this.startDateTime.hour() === 0) return false;
+        if (this.startDateTime.date() !== this.endDateTime.date()) return true;
     }
 
     /**
@@ -149,30 +148,10 @@ export default class CalendarEvent {
      * is the event a full day event?
      * @return {Boolean}
      */
-    get isFullDayEvent() {
-        // if multi day but not end nor startday then is a `full day`
-        if (this.addDays && !this.isFirstDay && !this.isLastDay){
-            return true;
-
-        } else if (this.addDays !== false) {
-            // if we are a multi day but IS first or last then we know it's not all day
-            return false;
-        }
-
-        if (this.calendarEvent.start && this.calendarEvent.start.date) {
-            return this.calendarEvent.start.date;
-        }
-
-        if (this._isFullDayEvent === undefined){
-            const start = moment(this.startDateTime);
-            const end = moment(this.endDateTime);
-            const diffInHours = end.diff(start, 'hours');
-            return diffInHours >= 24;
-        }
-        return this._isFullDayEvent;
-    }
-
-    set isFullDayEvent(isFull=false){
-        this._isFullDayEvent = isFull;
+    get isAllDayEvent() {
+        if (this.isFirstDay) return false;
+        if (this.isLastDay) return false;
+        if(this.addDay !== false) return true;
+        if (this.endDateTime.diff(this.startDateTime, 'hours') <= 24 && this.startDateTime.hour() === 0) return true;
     }
 }
