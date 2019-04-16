@@ -52,6 +52,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | showLocation | boolean | **Optional** | `false` Shows location address
 | showLocationIcon | boolean | **Optional** | `true` Shows map icon when event has a location
 | showMultiDay | boolean | **Optional** | `false` Split multiday events into per day
+| startFromToday | boolean | **Optional** | `false` Skip any events before today's date
 
 ## Configuration
 Download `calendar-card.js` from the [latest release](https://github.com/ljmerza/calendar-card/releases/latest) and upload it your /www folder of your Home Assistant config directory.

@@ -11,4 +11,5 @@ export default {
     showLocation: false,
     showLocationIcon: true,
     showMultiDay: false,
+    startFromToday: false,
 };

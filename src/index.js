@@ -100,6 +100,11 @@ class CalendarCard extends LitElement {
     const calendar = groupedEventsByDay.reduce((htmlTemplate, eventDay) => {
       const momentDay = moment(eventDay.day);
 
+      // if startFromToday config then skip events that are before today's date
+      if (this.config.startFromToday && moment().startOf('day').isAfter(momentDay)){
+        return htmlTemplate;
+      }
+
       // for each event in a day create template for that event
       const eventsTemplate = repeat(eventDay.events, event => event.id, (event, index) => {
           return html`

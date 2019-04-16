@@ -85,6 +85,11 @@ export default class CalendarCardEditor extends LitElement {
               .checked=${this._config.showMultiDay}
               .configValue="${"showMultiDay"}"
             >Show MultDay</paper-checkbox>
+            <paper-checkbox
+              @checked-changed="${this._valueChanged}" 
+              .configValue="${"startFromToday"}"
+              .checked=${this._config.startFromToday}
+            >Start From Today</paper-checkbox>
           </div>
 
           <div class='other-options'>
