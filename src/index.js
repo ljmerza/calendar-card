@@ -101,21 +101,23 @@ class CalendarCard extends LitElement {
       const momentDay = moment(eventDay.day);
 
       // for each event in a day create template for that event
-      const eventsTemplate = repeat(eventDay.events, event => event.id, (event, index) => html`
-          <tr class='day-wrapper ${eventDay.events.length === index + 1 ? ' day-wrapper-last' : '' }'>
-            <td class="date">
-              ${this.getDateHtml(index, momentDay)}
-            </td>
-            <td class="overview" @click=${()=> this.getLinkHtml(event)}>
-              <div class="title">${event.title}</div>
-              ${this.getTimeHtml(event)}
-              ${this.config.progressBar ? this.buildProgressBar(event) : ''}
-            </td>
-            <td class="location">
-              ${this.getLocationHtml(event)}
-            </td>
-          </tr>
-        `);
+      const eventsTemplate = repeat(eventDay.events, event => event.id, (event, index) => {
+          return html`
+            <tr class='day-wrapper ${eventDay.events.length === index + 1 ? ' day-wrapper-last' : '' }'>
+              <td class="date">
+                ${this.getDateHtml(index, momentDay)}
+              </td>
+              <td class="overview" @click=${()=> this.getLinkHtml(event)}>
+                <div class="title">${event.title}</div>
+                ${this.getTimeHtml(event)}
+                ${this.config.progressBar ? this.buildProgressBar(event) : ''}
+              </td>
+              <td class="location">
+                ${this.getLocationHtml(event)}
+              </td>
+            </tr>
+          `
+      });
 
       return html`
         ${htmlTemplate}
@@ -161,8 +163,11 @@ class CalendarCard extends LitElement {
        * then add as 'new' event
        */
       if (this.config.showMultiDay && newEvent.isMultiDay) {
-        const daysLong = (newEvent.endDateTime.diff(newEvent.startDateTime, 'days') + 1);
+        let daysLong = (newEvent.endDateTime.diff(newEvent.startDateTime, 'days') + 1);
         const partialEvents = [];
+
+        // if we are all day events then we don't need that last day ending at 12am
+        if (newEvent.endDateTime.hour() === 0 && newEvent.endDateTime.minutes() === 0) daysLong -= 1;
 
         for (let i = 0; i < daysLong; i++) {
 

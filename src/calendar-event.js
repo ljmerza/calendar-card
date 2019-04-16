@@ -149,9 +149,18 @@ export default class CalendarEvent {
      * @return {Boolean}
      */
     get isAllDayEvent() {
-        if (this.isFirstDay) return false;
-        if (this.isLastDay) return false;
-        if(this.addDay !== false) return true;
+
+        // if multiday then only full day is first day is all day
+        if (this.isFirstDay && (this.startDateTime.hour() || this.startDateTime.minutes())) return false;
+        else if (this.isFirstDay) return true;
+        // same for last day
+        if (this.isLastDay && (this.endDateTime.hour() || this.endDateTime.minutes())) return false;
+        else if (this.isLastDay) return true;
+        
+        // if we got this far and add days is true then it's a middle day of a multi day event so its all day
+        if(this.addDays) return true;
+
+        // 
         if (this.endDateTime.diff(this.startDateTime, 'hours') <= 24 && this.startDateTime.hour() === 0) return true;
     }
 }
