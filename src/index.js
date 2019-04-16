@@ -155,7 +155,7 @@ class CalendarCard extends LitElement {
     // convert each calendar object to a UI event
     let newEvents = [].concat(...allResults).reduce((events, event) => {
       let newEvent = new CalendarEvent(event);
-
+      
       /**
        * if we want to split multi day events and its a multi day event then 
        * get how long then event is and for each day
@@ -192,7 +192,7 @@ class CalendarCard extends LitElement {
 
     // sort events by date starting with soonest
     newEvents.sort((a, b) => a.startDateTime.isBefore(b.startDateTime) ? -1 : 1);
-
+    
     this.lastEventsUpdate = moment();
     this.eventNeedUpdating = false;
     return newEvents;
