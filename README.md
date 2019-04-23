@@ -1,6 +1,6 @@
 # Calendar Card for Home Assistant
 
-<p align="center">
+---
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -32,7 +32,7 @@ custom_updater:
     - https://raw.githubusercontent.com/ljmerza/calendar-card/master/custom_updater.json
 ```
 
-<h1>Usage</h1>
+## Usage
 ## Prerequisites
 You should have setup Google calendar integration or Caldav integration in HomeAssistant.
 
@@ -84,6 +84,8 @@ cd /config/custom_components/calendar
 wget https://raw.githubusercontent.com/home-assistant/home-assistant/dev/homeassistant/components/calendar/google.py
 ```
 Use a text editor to change the `'maxResults': 5` in `google.py` to a number of your liking.
+
+---
 
 Enjoy my card? Help me out for a couple of :beers: or a :coffee:!
 
