@@ -168,6 +168,9 @@ class CalendarCard extends LitElement {
        * then add as 'new' event
        */
       if (this.config.showMultiDay && newEvent.isMultiDay) {
+        const today = moment().startOf('day');
+        const endDate = today.add(this.config.numberOfDays, 'days');
+
         let daysLong = (newEvent.endDateTime.diff(newEvent.startDateTime, 'days') + 1);
         const partialEvents = [];
 
@@ -182,7 +185,11 @@ class CalendarCard extends LitElement {
           copiedEvent.daysLong = daysLong;
           
           const partialEvent = new CalendarEvent(copiedEvent);
-          partialEvents.push(partialEvent)
+
+          // only add event if starting before the config numberOfDays
+          if (endDate.isAfter(partialEvent.startDateTime)){
+            partialEvents.push(partialEvent)
+          }
         }
 
         events = events.concat(partialEvents);
