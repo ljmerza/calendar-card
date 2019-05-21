@@ -692,7 +692,7 @@ qe.a.version="2.24.0",Object(qe.b)(Ke.a),qe.a.fn=Yn,qe.a.min=function(){return s
         ${a}
       </div>
       `}getTimeHtml(e){if(!0===this.config.hideTime)return Q``;if(e.isAllDayEvent)return Q`<div class="time">All day</div>`;const t=e.startDateTime&&e.startDateTime.format(this.config.timeFormat),n=e.endDateTime&&e.endDateTime.format(this.config.timeFormat),a=e.isFirstDay&&`Start:${t}`||e.isLastDay&&`End:${n}`||t&&n&&`${t} - ${n}`||"";return Q`<div class="time">${a}</div>`}getLocationHtml(e){return e.location&&e.locationAddress&&this.config.showLocationIcon?Q`
-      <a href="https://www.google.com/maps?daddr=${e.locationAddress}" target="_blank" rel="nofollow noreferrer noopener"
+      <a href="https://www.google.com/maps?daddr=${e.location} ${e.locationAddress}" target="_blank" rel="nofollow noreferrer noopener"
         title='open location'>
         <div>
           <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
