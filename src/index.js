@@ -323,7 +323,7 @@ class CalendarCard extends LitElement {
       return html``;
 
     return html`
-      <a href="https://www.google.com/maps?daddr=${event.locationAddress}" target="_blank" rel="nofollow noreferrer noopener"
+      <a href="https://www.google.com/maps?daddr=${event.location} ${event.locationAddress}" target="_blank" rel="nofollow noreferrer noopener"
         title='open location'>
         <div>
           <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
