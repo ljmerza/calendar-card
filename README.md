@@ -77,13 +77,7 @@ views:
 ```
 
 ## You want more than 5 Google events?
-
-```bash
-mkdir /config/custom_components/calendar
-cd /config/custom_components/calendar
-wget https://raw.githubusercontent.com/home-assistant/home-assistant/dev/homeassistant/components/calendar/google.py
-```
-Use a text editor to change the `'maxResults': 5` in `google.py` to a number of your liking.
+Open the `google_calendars.yaml` file and and `max_results: 20` for each calendar items you want more events for. See documentation at [Home Assistant](https://www.home-assistant.io/components/calendar.google/)
 
 ---
 
