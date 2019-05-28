@@ -461,6 +461,7 @@ var Ce=function(e,t){var n=e.startNode.parentNode,a=void 0===t?e.endNode:t.start
     table {
         border-spacing: 0;
         margin-bottom: 10px;
+        width: 100%;
     }
 
     .day-wrapper td {
