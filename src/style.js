@@ -31,6 +31,7 @@ const style = css`
     table {
         border-spacing: 0;
         margin-bottom: 10px;
+        width: 100%;
     }
 
     .day-wrapper td {
