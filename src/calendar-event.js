@@ -163,4 +163,12 @@ export default class CalendarEvent {
         // 
         if (this.endDateTime.diff(this.startDateTime, 'hours') <= 24 && this.startDateTime.hour() === 0) return true;
     }
+
+    /**
+     * get the name of the calendar this event is from
+     * @return {String}
+     */
+    get calendarName() {
+        return this.calendarEvent.calendarName;
+    }
 }

@@ -51,6 +51,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | hideTime | boolean | **Optional** | `false` Hides event time section entirely
 | showLocation | boolean | **Optional** | `false` Shows location address
 | showLocationIcon | boolean | **Optional** | `true` Shows map icon when event has a location
+| showCalendarName | boolean | **Optional** | `false` Shows what calendar each event is from
 | showMultiDay | boolean | **Optional** | `false` Split multiday events into per day
 | startFromToday | boolean | **Optional** | `false` Skip any events before today's date
 
@@ -74,6 +75,8 @@ views:
     progressBar: true
     entities:
       - calendar.ljmerzagmailcom
+      - entity: calendar.examplecom
+        name: Example Calendar
 ```
 
 ## You want more than 5 Google events?

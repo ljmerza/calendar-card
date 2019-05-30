@@ -120,6 +120,9 @@ class CalendarCard extends LitElement {
               <td class="location">
                 ${this.getLocationHtml(event)}
               </td>
+              <td class="calendar">
+                ${this.getCalendarNameHtml(event)}
+              </td>
             </tr>
           `
       });
@@ -154,11 +157,20 @@ class CalendarCard extends LitElement {
     const end = today.add(this.config.numberOfDays, 'days').format(dateFormat);
 
     // generate urls for calendars and get each calendar data
-    const urls = this.config.entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
-    const allResults = await Promise.all(urls.map(url => this.__hass.callApi('get', url)));
+    let calendarEntities = [];
+    this.config.entities.forEach(function(entity) {
+      if (typeof entity === "string") {
+        let calendarEntity = this.__hass.callApi('get', `calendars/${entity}?start=${start}Z&end=${end}Z`);
+        calendarEntity.calendarName = entity;
+      } else {
+        let calendarEntity = this.__hass.callApi('get', `calendars/${entity.entity}?start=${start}Z&end=${end}Z`);
+        calendarEntity.calendarName = entity.name;
+      }
+      calendarEntities.append(calendarEntity);
+    }
 
     // convert each calendar object to a UI event
-    let newEvents = [].concat(...allResults).reduce((events, event) => {
+    let newEvents = [].concat(...calendarEntities).reduce((events, event) => {
       let newEvent = new CalendarEvent(event);
       
       /**
@@ -333,6 +345,25 @@ class CalendarCard extends LitElement {
         </div>
       </a>
     `;
+  }
+
+  /**
+   * generate the html for showing the calendar name the event belongs to
+   * @param {CalendarEvent} event
+   */
+  getCalendarNameHtml(event) {
+    if (!this.config.showCalendarName)
+      return html``;
+
+    return html`
+      <div>
+        <ha-icon icon="mdi:calendar-blank-outline"></ha-icon>&nbsp;
+      </div>
+      <div>
+        ${event.calendarName}
+      </div>
+    </a>
+  `;
   }
 }
 
