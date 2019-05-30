@@ -10,6 +10,7 @@ export default {
     progressBar: false,
     showLocation: false,
     showLocationIcon: true,
+    showCalendarName: false,
     showMultiDay: false,
     startFromToday: false,
 };
