@@ -32,31 +32,19 @@ class CalendarCard extends LitElement {
       throw new Error('You need to define at least one calendar entity via entities');
     }
 
-    const oldEvents = this.config && this.config.entities || [];
-    // if the events lists have changed then we need to notify that eventsd need updating
-    if (!this.config || !this.arraysEqual(oldEvents, config.entities) || config.numberOfDays !== this.config.numberOfDays) {
+    // if checked entities has changed then update events
+    const newNames = (config.entities || []).map(entity => entity.entity || entity);
+    const oldNames = ((this.config || {}).entities || []).map(entity => entity.entity || entity);
+    if(!this.config || JSON.stringify(newNames) !== JSON.stringify(oldNames) || config.numberOfDays !== this.config.numberOfDays) {
       this.eventsNeedUpdating = true;
     }
 
-    this.config = Object.assign({}, defaultConfig, config);
-  }
-
-  /**
-   * are two arrays equal?
-   * @param {*} a 
-   * @param {*} b 
-   * @return {boolean}
-   */
-  arraysEqual(a, b) {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length != b.length) return false;
-
-    for (let i = 0; i < a.length; ++i) {
-      if (a[i] !== b[i]) return false;
+    // if anything changed then overall card needs updating
+    if(JSON.stringify(config) !== JSON.stringify(this.config || {})) {
+      this.cardNeedsUpdating = true;
     }
 
-    return true;
+    this.config = Object.assign({}, defaultConfig, config);
   }
 
   /**
@@ -72,7 +60,7 @@ class CalendarCard extends LitElement {
   }
 
   shouldUpdate() {
-    return this.eventsNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15;
+    return this.cardNeedsUpdating || this.eventsNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15;
   }
 
   render() {
@@ -94,7 +82,8 @@ class CalendarCard extends LitElement {
    */
   async updateCard() {
     moment.locale(this.hass.language);
-    const events = await this.getAllEvents();
+
+    const events = await this.getAllEvents()
     const groupedEventsByDay = this.groupEventsByDay(events);
 
     const calendar = groupedEventsByDay.reduce((htmlTemplate, eventDay) => {
@@ -115,7 +104,8 @@ class CalendarCard extends LitElement {
               <td class="overview" @click=${()=> this.getLinkHtml(event)}>
                 <div class="title">${event.title}</div>
                 ${this.getTimeHtml(event)}
-                ${this.config.progressBar ? this.buildProgressBar(event) : ''}
+                ${this.getEventOrigin(event)}
+                ${this.config.progressBar ? this.getProgressBar(event) : ''}
               </td>
               <td class="location">
                 ${this.getLocationHtml(event)}
@@ -131,6 +121,7 @@ class CalendarCard extends LitElement {
     }, html``);
 
     this.eventsNeedUpdating = false;
+    this.cardNeedsUpdating = false;
 
     return html`
       <table>
@@ -145,7 +136,9 @@ class CalendarCard extends LitElement {
    * gets all events for all calendars added to this card's config
    * @return {Promise<Array<CalendarEvent>>}
    */
-  async getAllEvents() {
+  async getAllEvents(){
+    // if we dont need to fetch new events then just process current events
+    if(!this.eventsNeedUpdating) return this.processEvents();
 
     // create url params
     const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
@@ -153,13 +146,37 @@ class CalendarCard extends LitElement {
     const start = today.format(dateFormat);
     const end = today.add(this.config.numberOfDays, 'days').format(dateFormat);
 
-    // generate urls for calendars and get each calendar data
-    const urls = this.config.entities.map(entity => `calendars/${entity}?start=${start}Z&end=${end}Z`);
-    const allResults = await Promise.all(urls.map(url => this.__hass.callApi('get', url)));
+    // for each calendar entity get all events
+    // each entity may be a string of entity id or
+    // an object with custom name given with entity id
+    this._allEvents = [];
+    for(let i=0; i < this.config.entities.length; i++){
+      const entity = this.config.entities[i];
+      const calendarEntity = (entity && entity.entity) || entity;
+      const url = `calendars/${calendarEntity}?start=${start}Z&end=${end}Z`;
+
+      const events = (await this.__hass.callApi('get', url))
+      .map(event => {
+        event.entity = entity;
+        return event;
+      });
+
+      this._allEvents.push(...events);
+    }
+
+    return this.processEvents();
+  }
+
+  /**
+   * converts all calendar events to CalendarEvent objects
+   * @return {Promise<Array<CalendarEvent>>}
+   */
+  async processEvents() {
 
     // convert each calendar object to a UI event
-    let newEvents = [].concat(...allResults).reduce((events, event) => {
-      let newEvent = new CalendarEvent(event);
+    let newEvents = this._allEvents.reduce((events, event) => {
+      event.originCalendar = this.config.entities.find(entity => entity.entity === event.entity.entity);
+      const newEvent = new CalendarEvent(event);
       
       /**
        * if we want to split multi day events and its a multi day event then 
@@ -215,7 +232,7 @@ class CalendarCard extends LitElement {
    * @return {TemplateResult}
    */
   createHeader() {
-    if (this.config.title === false) return html``;
+    if (this.config.hideHeader || this.config.title === false) return html``;
 
     return html`
       <div class='header'>
@@ -229,7 +246,7 @@ class CalendarCard extends LitElement {
    * @param {CalendarEvent} event
    * @return {TemplateResult}
    */
-  buildProgressBar(event) {
+  getProgressBar(event) {
     if (!event.startDateTime || !event.endDateTime || event.isAllDayEvent) return html``;
 
     const now = moment(new Date());
@@ -247,6 +264,17 @@ class CalendarCard extends LitElement {
         class="progress-bar" 
       ></ha-icon>
       <hr class="progress-bar" />
+    `;
+  }
+
+  getEventOrigin(event){
+    if (!this.config.showEventOrigin || !event.originCalendar || !event.originCalendar.name) return html``;
+
+    return html`
+      <div class='event-origin'>
+        <ha-icon icon="mdi:calendar-blank-outline"></ha-icon> 
+        <span>${event.originCalendar.name}</span>
+      </div>
     `;
   }
 

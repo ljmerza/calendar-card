@@ -41,7 +41,8 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:calendar-card`
-| title | string|boolean | **Optional** | `Calendar` Header shown at top of card or false to hide
+| title | string | **Optional** | `Calendar` Header shown at top of card
+| hideHeader | boolean | **Optional** | `false` Hide the header regardless of value
 | numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | entities | object | **Required** | List of calendars to display
 | timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
@@ -53,6 +54,7 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | showLocationIcon | boolean | **Optional** | `true` Shows map icon when event has a location
 | showMultiDay | boolean | **Optional** | `false` Split multiday events into per day
 | startFromToday | boolean | **Optional** | `false` Skip any events before today's date
+| showEventOrigin | boolean | **Optional** | `false` Shows what calendar each event is from
 
 ## Configuration
 Download `calendar-card.js` from the [latest release](https://github.com/ljmerza/calendar-card/releases/latest) and upload it your /www folder of your Home Assistant config directory.

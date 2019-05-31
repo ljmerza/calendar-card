@@ -10,15 +10,19 @@ export default class CalendarEvent {
      * @param  {Object} calendarEvent
      */
     constructor(calendarEvent) {
-        this.calendarEvent = calendarEvent;
+        this._calendarEvent = calendarEvent;
     }
 
     get id(){
-        return this.calendarEvent.id + this.title;
+        return this._calendarEvent.id + this.title;
     }
 
     get rawEvent(){
-        return this.calendarEvent;
+        return this._calendarEvent;
+    }
+
+    get originCalendar(){
+        return this._calendarEvent.originCalendar;
     }
 
     /**
@@ -27,7 +31,7 @@ export default class CalendarEvent {
      */
     get startDateTime() {
         if (this._startDateTime === undefined){
-            const date = this.calendarEvent.start && this.calendarEvent.start.date || this.calendarEvent.start.dateTime || this.calendarEvent.start || '';
+            const date = this._calendarEvent.start && this._calendarEvent.start.date || this._calendarEvent.start.dateTime || this.calendarEvent.start || '';
             this._startDateTime =  this._processDate(date);
         }
         return this._startDateTime;
@@ -39,26 +43,26 @@ export default class CalendarEvent {
      */
     get endDateTime() {
         if (this._endDateTime === undefined) {
-            const date = this.calendarEvent.end && this.calendarEvent.end.date || this.calendarEvent.end.dateTime || this.calendarEvent.end;
+            const date = this._calendarEvent.end && this._calendarEvent.end.date || this._calendarEvent.end.dateTime || this.calendarEvent.end;
             this._endDateTime = this._processDate(date, true);
         }
         return this._endDateTime;
     }
 
     get addDays(){
-        return this.calendarEvent.addDays !== undefined ? this.calendarEvent.addDays : false;
+        return this._calendarEvent.addDays !== undefined ? this._calendarEvent.addDays : false;
     }
 
     get daysLong() {
-        return this.calendarEvent.daysLong;
+        return this._calendarEvent.daysLong;
     }
 
     get isFirstDay(){
-        return this.calendarEvent.addDays === 0;
+        return this._calendarEvent.addDays === 0;
     }
 
     get isLastDay(){
-        return this.calendarEvent.addDays === (this.calendarEvent.daysLong - 1);
+        return this._calendarEvent.addDays === (this._calendarEvent.daysLong - 1);
     }
 
     /**
@@ -92,7 +96,7 @@ export default class CalendarEvent {
      * @return {String}
      */
     get htmlLink() {
-        return this.calendarEvent.htmlLink || '';
+        return this._calendarEvent.htmlLink || '';
     }
 
     /**
@@ -109,10 +113,12 @@ export default class CalendarEvent {
      * @return {String}
      */
     get title() {
-        let title = (this.calendarEvent.summary || this.calendarEvent.title || '');
-        if (this.calendarEvent.daysLong){
+        let title = this._calendarEvent.summary || this._calendarEvent.title || '';
+
+        if (this._calendarEvent.daysLong){
             title += ` (${this.addDays + 1}/${this.daysLong})`;
         }
+
         return title;
     }
 
@@ -121,7 +127,7 @@ export default class CalendarEvent {
      * @return {String}
      */
     get description() {
-        return this.calendarEvent.description;
+        return this._calendarEvent.description;
     }
 
     /**
@@ -129,8 +135,8 @@ export default class CalendarEvent {
      * @return {String}
      */
     get location() {
-        if (!this.calendarEvent.location) return '';
-        return this.calendarEvent.location.split(',')[0] || '';
+        if (!this._calendarEvent.location) return '';
+        return this._calendarEvent.location.split(',')[0] || '';
     }
 
     /**
@@ -138,9 +144,9 @@ export default class CalendarEvent {
      * @return {String}
      */
     get locationAddress() {
-        if (!this.calendarEvent.location) return '';
+        if (!this._calendarEvent.location) return '';
 
-        const address = this.calendarEvent.location.substring(this.calendarEvent.location.indexOf(',') + 1);
+        const address = this._calendarEvent.location.substring(this._calendarEvent.location.indexOf(',') + 1);
         return address.split(' ').join('+');
     }
 

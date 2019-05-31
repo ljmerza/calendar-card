@@ -30,7 +30,18 @@ export default class CalendarCardEditor extends LitElement {
 
   get entityOptions() {
     const entities = Object.keys(this.hass.states).filter(eid => eid.substr(0, eid.indexOf('.')) === 'calendar');
-    return entities.map(eid => ({ name: eid, checked: this._config.entities.includes(eid) }));
+
+    const entityOptions = entities.map(eid => { 
+      const matchingConfigEnitity = this._config.entities.find(entity => (entity && entity.entity || entity) === eid);
+
+      return { 
+        entity: eid,
+        name: matchingConfigEnitity ? matchingConfigEnitity.name || eid : eid, 
+        checked: !!matchingConfigEnitity
+      }
+    });
+
+    return entityOptions;
   }
 
   firstUpdated(){
@@ -50,17 +61,25 @@ export default class CalendarCardEditor extends LitElement {
             label="Title (Optional)"
             .value="${this._config.title}"
             .configValue="${"title"}"
-            @value-changed="${this._valueChanged}"
+            @value-changed="${this.inputChanged}"
           ></paper-input>
+
+           <div class='checkbox-options'>
+            <paper-checkbox
+              @checked-changed="${this.checkboxChanged}" 
+              .checked=${this._config.hideHeader}
+              .configValue="${"hideHeader"}"
+            >Hide Header</paper-checkbox>
+          </div>
 
           <div class='checkbox-options'>
             <paper-checkbox
-              @checked-changed="${this._valueChanged}" 
+              @checked-changed="${this.checkboxChanged}" 
               .checked=${this._config.hideTime}
               .configValue="${"hideTime"}"
             >Hide Time</paper-checkbox>
             <paper-checkbox
-              @checked-changed="${this._valueChanged}" 
+              @checked-changed="${this.checkboxChanged}" 
               .checked=${this._config.progressBar}
               .configValue="${"progressBar"}"
             >Progress Bar</paper-checkbox>
@@ -68,12 +87,12 @@ export default class CalendarCardEditor extends LitElement {
 
           <div class='checkbox-options'>
             <paper-checkbox
-              @checked-changed="${this._valueChanged}" 
+              @checked-changed="${this.checkboxChanged}" 
               .checked=${this._config.showLocation}
               .configValue="${"showLocation"}"
             >Show Location</paper-checkbox>
             <paper-checkbox
-              @checked-changed="${this._valueChanged}" 
+              @checked-changed="${this.checkboxChanged}" 
               .checked=${this._config.showLocationIcon}
               .configValue="${"showLocationIcon"}"
             >Show Location Icon</paper-checkbox>
@@ -81,15 +100,23 @@ export default class CalendarCardEditor extends LitElement {
 
           <div class='checkbox-options'>
             <paper-checkbox
-              @checked-changed="${this._valueChanged}" 
+              @checked-changed="${this.checkboxChanged}" 
               .checked=${this._config.showMultiDay}
               .configValue="${"showMultiDay"}"
             >Show MultDay</paper-checkbox>
             <paper-checkbox
-              @checked-changed="${this._valueChanged}" 
+              @checked-changed="${this.checkboxChanged}" 
               .configValue="${"startFromToday"}"
               .checked=${this._config.startFromToday}
             >Start From Today</paper-checkbox>
+          </div>
+
+          <div class='checkbox-options'>
+            <paper-checkbox
+              @checked-changed="${this.checkboxChanged}" 
+              .checked=${this._config.showEventOrigin}
+              .configValue="${"showEventOrigin"}"
+            >Show Event Origin</paper-checkbox>
           </div>
 
           <div class='other-options'>
@@ -97,28 +124,28 @@ export default class CalendarCardEditor extends LitElement {
               label="Number Of Days"
               .value="${this._config.numberOfDays}"
               .configValue="${"numberOfDays"}"
-              @value-changed="${this._valueChanged}"
+              @value-changed="${this.inputChanged}"
             ></paper-input>
 
             <paper-input
               label="Time Format"
               .value="${this._config.timeFormat}"
               .configValue="${"timeFormat"}"
-              @value-changed="${this._valueChanged}"
+              @value-changed="${this.inputChanged}"
             ></paper-input>
 
             <paper-input
               label="Date Top Format"
               .value="${this._config.dateTopFormat}"
               .configValue="${"dateTopFormat"}"
-              @value-changed="${this._valueChanged}"
+              @value-changed="${this.inputChanged}"
             ></paper-input>
 
             <paper-input
               label="Date Bottom Format"
               .value="${this._config.dateBottomFormat}"
               .configValue="${"dateBottomFormat"}"
-              @value-changed="${this._valueChanged}"
+              @value-changed="${this.inputChanged}"
             ></paper-input>
           </div>
 
@@ -129,11 +156,26 @@ export default class CalendarCardEditor extends LitElement {
           <h3>Entities</h3>
           ${
             this.entityOptions.map(entity => {
-              return html`<paper-checkbox 
-                @checked-changed="${this._valueChanged}" 
-                .checked=${entity.checked}
-                .entityValue="${entity.name}"
-              >${entity.name}</paper-checkbox>`;
+              return html`
+                <paper-checkbox 
+                  @checked-changed="${this.entityChanged}" 
+                  .checked=${entity.checked}
+                  .entityId="${entity.entity}"
+                >${entity.entity}</paper-checkbox>
+
+                ${this._config.showEventOrigin ? 
+                  html`
+                    <div class='origin-calendar'>
+                      <paper-input
+                        label="Calendar Origin"
+                        .value="${entity.name}"
+                        .entityId="${entity.entity}"
+                        @value-changed="${this.entityNameChanged}"
+                      ></paper-input>
+                    </div>
+                  ` : html``
+                }
+              `;
             })
           }
         </div>
@@ -141,31 +183,86 @@ export default class CalendarCardEditor extends LitElement {
     `;
   }
 
-  _valueChanged(ev) {
-    if (!this._config || !this.hass || !this._firstRendered) return;
+  /**
+   * 
+   * @param {*} ev 
+   */
+  checkboxChanged(ev){
+    if (this.cantFireEvent) return;
+    const { target: { configValue }, detail: { value } } = ev;
 
-    const { target: { configValue, value, entityValue }, detail: { value: checkedValue} } = ev;
+    this._config = Object.assign({}, this._config, { [configValue]: value } );
+    fireEvent(this, 'config-changed', { config: this._config });
+  }
 
-    if (entityValue){
+  /**
+   * change on text input
+   * @param {*} ev 
+   */
+  inputChanged(ev){
+    if (this.cantFireEvent) return;
+    const { target: { configValue }, detail: { value } } = ev;
 
-      if (checkedValue) {
-        const entities = Array.from(this._config.entities)
-        entities.push(entityValue)
-        this._config = Object.assign({}, this._config, { entities: entities });
-      } else {
-        const newEntities = this._config.entities.filter(entity => entity !== entityValue);
-        this._config = Object.assign({}, this._config, {entities: newEntities} );
-      }
+    this._config = Object.assign({}, this._config, { [configValue]: value } );
+    fireEvent(this, 'config-changed', { config: this._config });
+  }
 
-    } else if (checkedValue !== undefined || checkedValue !== null){
-      this._config = Object.assign({}, this._config, { [configValue]: checkedValue } );
+  get entities(){
+    const entities = [...(this._config.entities || [])];
 
+    // convert any legacy entity strings into objects
+    let entityObjects = entities.map(entity => {
+      if(entity.entity) return entity;
+      return { entity, name: entity };
+    });
+
+    return entityObjects;
+  }
+
+  /**
+   * change the calendar name of an entity
+   * @param {*} ev 
+   */
+  entityNameChanged(ev){
+    if (this.cantFireEvent) return;
+    const { target: { entityId }, detail: { value } } = ev;
+
+    let entityObjects = [...this.entities];
+
+    entityObjects = entityObjects.map(entity => {
+      if(entity.entity === entityId) entity.name = value || '';
+      return entity;
+    });
+
+    this._config = Object.assign({}, this._config, { entities: entityObjects } );
+    fireEvent(this, 'config-changed', { config: this._config });
+  }
+
+  /**
+   * add or remove calendar entities from config
+   * @param {*} ev 
+   */
+  entityChanged(ev){
+    if (this.cantFireEvent) return;
+    const { target: { entityId }, detail: { value } } = ev;
+
+    let entityObjects = [...this.entities];
+
+    if(value){
+      entityObjects.push({ entity: entityId, name: entityId });
     } else {
-      this._config = Object.assign({}, this._config, { [configValue]: value } );
+      entityObjects = entityObjects.filter(entity => entity.entity !== entityId);
     }
 
-    console.log(this._config);
+    this._config = Object.assign({}, this._config, { entities: entityObjects } );
     fireEvent(this, 'config-changed', { config: this._config });
+  }
+
+  /**
+   * stop events from firing if certains conditions not met
+   */
+  get cantFireEvent(){
+    return (!this._config || !this.hass || !this._firstRendered);
   }
 }
 

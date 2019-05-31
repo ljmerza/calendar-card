@@ -31,6 +31,11 @@ const style = css`
     .overall-config {
         margin-bottom: 10px;
     }
+
+    .origin-calendar {
+        width: 50%;
+        margin-left: 35px;
+    }
 `;
 
 export default style;

@@ -83,6 +83,15 @@ const style = css`
         display: flex;
         color: var(--accent-color);
     }
+
+    .event-origin span {
+        color: var(--accent-color);
+    }
+
+    .event-origin ha-icon {
+        font-size: 0.6em;
+        color: var(--accent-color);
+    }
 `;
 
 export default style;
