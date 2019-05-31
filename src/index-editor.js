@@ -184,7 +184,7 @@ export default class CalendarCardEditor extends LitElement {
   }
 
   /**
-   * 
+   * update config for a checkbox input
    * @param {*} ev 
    */
   checkboxChanged(ev){
