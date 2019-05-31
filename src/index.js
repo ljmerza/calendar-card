@@ -116,12 +116,10 @@ class CalendarCard extends LitElement {
                 <div class="title">${event.title}</div>
                 ${this.getTimeHtml(event)}
                 ${this.config.progressBar ? this.buildProgressBar(event) : ''}
+                ${this.getCalendarNameHtml(event)}
               </td>
               <td class="location">
                 ${this.getLocationHtml(event)}
-              </td>
-              <td class="calendar">
-                ${this.getCalendarNameHtml(event)}
               </td>
             </tr>
           `
@@ -158,16 +156,24 @@ class CalendarCard extends LitElement {
 
     // generate urls for calendars and get each calendar data
     let calendarEntities = [];
-    this.config.entities.forEach(function(entity) {
+    await Promise.all(this.config.entities.map(async (entity) => {
+      let calendarEntity;
       if (typeof entity === "string") {
-        let calendarEntity = this.__hass.callApi('get', `calendars/${entity}?start=${start}Z&end=${end}Z`);
-        calendarEntity.calendarName = entity;
+        calendarEntity = await this.__hass.callApi('get', `calendars/${entity}?start=${start}Z&end=${end}Z`);
+        calendarEntity.map((event) => {
+          // Remove the calendar. prefix
+          event.calendarName = entity.substr(entity.indexOf('.') + 1);
+        });
+        console.log(calendarEntity);
       } else {
-        let calendarEntity = this.__hass.callApi('get', `calendars/${entity.entity}?start=${start}Z&end=${end}Z`);
-        calendarEntity.calendarName = entity.name;
+        calendarEntity = await this.__hass.callApi('get', `calendars/${entity.entity}?start=${start}Z&end=${end}Z`);
+        calendarEntity.map((event) => {
+          event.calendarName = entity.name ? entity.name : entity.entity.substr(entity.entity.indexOf('.') + 1);
+        });
+        console.log(calendarEntity);
       }
-      calendarEntities.append(calendarEntity);
-    }
+      calendarEntities.push(calendarEntity);
+    }));
 
     // convert each calendar object to a UI event
     let newEvents = [].concat(...calendarEntities).reduce((events, event) => {
@@ -357,12 +363,8 @@ class CalendarCard extends LitElement {
 
     return html`
       <div>
-        <ha-icon icon="mdi:calendar-blank-outline"></ha-icon>&nbsp;
+        <ha-icon icon="mdi:calendar-blank-outline"></ha-icon> ${event.calendarName}
       </div>
-      <div>
-        ${event.calendarName}
-      </div>
-    </a>
   `;
   }
 }
