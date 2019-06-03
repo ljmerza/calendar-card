@@ -1,6 +1,6 @@
 {
     "name": "calendar-card",
-    "version": "3.11.0",
+    "version": "3.11.1",
     "description": "A calendar card for Home Assistant Lovelace UI",
     "keywords": [
         "home-assistant",
@@ -17,22 +17,22 @@
     "author": "Leonardo Merza <ljmerza@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "@babel/polyfill": "^7.4.3",
+        "@babel/polyfill": "^7.4.4",
         "core-js": "^2.6.5",
-        "lit-element": "^2.0.1",
+        "lit-element": "^2.1.0",
         "moment": "^2.24.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.4.3",
-        "@babel/core": "^7.4.3",
-        "@babel/preset-env": "^7.4.3",
-        "@babel/register": "^7.4.0",
-        "babel-loader": "^8.0.5",
-        "eslint": "^5.13.0",
+        "@babel/cli": "^7.4.4",
+        "@babel/core": "^7.4.5",
+        "@babel/preset-env": "^7.4.5",
+        "@babel/register": "^7.4.4",
+        "babel-loader": "^8.0.6",
+        "eslint": "^5.16.0",
         "eslint-config-airbnb-base": "^13.1.0",
-        "eslint-plugin-import": "^2.16.0",
-        "webpack": "^4.29.6",
-        "webpack-cli": "^3.3.0",
+        "eslint-plugin-import": "^2.17.3",
+        "webpack": "^4.32.2",
+        "webpack-cli": "^3.3.2",
         "webpack-merge": "^4.2.1"
     },
     "scripts": {

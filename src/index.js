@@ -36,7 +36,7 @@ class CalendarCard extends LitElement {
     const newNames = (config.entities || []).map(entity => entity.entity || entity);
     const oldNames = ((this.config || {}).entities || []).map(entity => entity.entity || entity);
     if(!this.config || JSON.stringify(newNames) !== JSON.stringify(oldNames) || config.numberOfDays !== this.config.numberOfDays) {
-      this.eventsNeedUpdating = true;
+      this.cardNeedsUpdating = true;
     }
 
     // if anything changed then overall card needs updating
@@ -60,7 +60,11 @@ class CalendarCard extends LitElement {
   }
 
   shouldUpdate() {
-    return this.cardNeedsUpdating || this.eventsNeedUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15;
+    return this.cardNeedsUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15;
+  }
+
+  updated(){
+    this.cardIsUpdating = false;
   }
 
   render() {
@@ -81,6 +85,8 @@ class CalendarCard extends LitElement {
    * @return {TemplateResult}
    */
   async updateCard() {
+    if (this.cardIsUpdating) return;
+    this.cardIsUpdating = true;
     moment.locale(this.hass.language);
 
     const events = await this.getAllEvents()
@@ -120,7 +126,6 @@ class CalendarCard extends LitElement {
       `;
     }, html``);
 
-    this.eventsNeedUpdating = false;
     this.cardNeedsUpdating = false;
 
     return html`
@@ -137,8 +142,6 @@ class CalendarCard extends LitElement {
    * @return {Promise<Array<CalendarEvent>>}
    */
   async getAllEvents(){
-    // if we dont need to fetch new events then just process current events
-    if(!this.eventsNeedUpdating) return this.processEvents();
 
     // create url params
     const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
@@ -171,10 +174,13 @@ class CalendarCard extends LitElement {
    * converts all calendar events to CalendarEvent objects
    * @return {Promise<Array<CalendarEvent>>}
    */
-  async processEvents() {
+  processEvents() {
+    // for some reason Lit Element is trying to sync multiple times before this is complete causing
+    // duplicate events - this forces unique events only by looking at calendar event id
+    const uniqueEvents = this._allEvents.filter((event, index, self) => index === self.findIndex(e => e.id === event.id));
 
     // convert each calendar object to a UI event
-    let newEvents = this._allEvents.reduce((events, event) => {
+    let newEvents = uniqueEvents.reduce((events, event) => {
       event.originCalendar = this.config.entities.find(entity => entity.entity === event.entity.entity);
       const newEvent = new CalendarEvent(event);
       
@@ -195,7 +201,6 @@ class CalendarCard extends LitElement {
         if (newEvent.endDateTime.hour() === 0 && newEvent.endDateTime.minutes() === 0) daysLong -= 1;
 
         for (let i = 0; i < daysLong; i++) {
-
           // copy event then add the current day/total days to 'new' event
           const copiedEvent = JSON.parse(JSON.stringify(newEvent.rawEvent));
           copiedEvent.addDays = i;
@@ -223,7 +228,6 @@ class CalendarCard extends LitElement {
     newEvents.sort((a, b) => a.startDateTime.isBefore(b.startDateTime) ? -1 : 1);
     
     this.lastEventsUpdate = moment();
-    this.eventNeedUpdating = false;
     return newEvents;
   }
 
