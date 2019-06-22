@@ -31,7 +31,7 @@ export default class CalendarEvent {
      */
     get startDateTime() {
         if (this._startDateTime === undefined){
-            const date = this._calendarEvent.start && this._calendarEvent.start.date || this._calendarEvent.start.dateTime || this.calendarEvent.start || '';
+            const date = this._calendarEvent.start && this._calendarEvent.start.date || this._calendarEvent.start.dateTime || this._calendarEvent.start || '';
             this._startDateTime =  this._processDate(date);
         }
         return this._startDateTime;
@@ -43,7 +43,7 @@ export default class CalendarEvent {
      */
     get endDateTime() {
         if (this._endDateTime === undefined) {
-            const date = this._calendarEvent.end && this._calendarEvent.end.date || this._calendarEvent.end.dateTime || this.calendarEvent.end;
+            const date = this._calendarEvent.end && this._calendarEvent.end.date || this._calendarEvent.end.dateTime || this._calendarEvent.end;
             this._endDateTime = this._processDate(date, true);
         }
         return this._endDateTime;
