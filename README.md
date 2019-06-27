@@ -59,12 +59,11 @@ resources:
 ## Configurations
 ---
 ```yaml
-views:
-  - type: custom:calendar-card
-    title: "My Calendar"
-    progressBar: true
-    entities:
-      - calendar.ljmerzagmailcom
+type: custom:calendar-card
+title: "My Calendar"
+progressBar: true
+entities:
+  - calendar.ljmerzagmailcom
 ```
 
 ## You want more than 5 Google events?
