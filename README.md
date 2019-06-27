@@ -34,6 +34,7 @@ Add the following to resources in your lovelace config:
 ```yaml
 resources:
   - url: /community_plugin/calendar-card/calendar-card.js
+    type: js
 ```
 
 ## Options
