@@ -5,7 +5,7 @@ module.exports = {
     devtool: 'source-map',
     output: {
         filename: 'calendar-card.js',
-        path: path.resolve(__dirname, '../')
+        path: path.resolve(__dirname, '../dist')
     },
     module: {
         rules: [
