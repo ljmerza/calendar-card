@@ -1,6 +1,9 @@
 # Calendar Card for Home Assistant
 Show Google calendar events
 
+<img src='https://raw.githubusercontent.com/ljmerza/calendar-card/master/card.png' />
+
+
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
 
@@ -8,7 +11,7 @@ Show Google calendar events
 [![GitHub Activity][commits-shield]][commits]
 
 ## Features
-
+---
 * Show the next 5 events on your Google Calendar (default set by home assistant)
 * Set custom time and date format for each event
 * Click on event to open in your Google calendar app
@@ -19,24 +22,22 @@ Show Google calendar events
 * Progress bar for ongoing events
 * Split multiday events
 
-## Track Updates
 
-This custom card can be tracked with the help of [custom-updater](https://github.com/custom-components/custom_updater).
-
-In your configuration.yaml
-
-```yaml
-custom_updater:
-  card_urls:
-    - https://raw.githubusercontent.com/ljmerza/calendar-card/master/custom_updater.json
-```
-
-## Usage
 ## Prerequisites
+---
 You should have setup Google calendar integration or Caldav integration in HomeAssistant.
 
-## Options
+## Installation through [HACS](https://github.com/custom-components/hacs)
+---
+Add the following to resources in your lovelace config:
 
+```yaml
+resources:
+  - url: /community_plugin/calendar-card/calendar-card.js
+```
+
+## Options
+---
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:calendar-card`
@@ -55,19 +56,8 @@ You should have setup Google calendar integration or Caldav integration in HomeA
 | startFromToday | boolean | **Optional** | `false` Skip any events before today's date
 | showEventOrigin | boolean | **Optional** | `false` Shows what calendar each event is from
 
-## Configuration
-Download `calendar-card.js` from the [latest release](https://github.com/ljmerza/calendar-card/releases/latest) and upload it your /www folder of your Home Assistant config directory.
-
-In your ui-lovelace.yaml
-
-```yaml
-resources:
-  - url: /local/calendar-card.js?track=true
-    type: js
-```
-
-Add the custom card to views:
-
+## Configurations
+---
 ```yaml
 views:
   - type: custom:calendar-card
