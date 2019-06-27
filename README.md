@@ -1,6 +1,5 @@
 # Calendar Card for Home Assistant
-
----
+Show Google calendar events
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
