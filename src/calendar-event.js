@@ -14,7 +14,7 @@ export default class CalendarEvent {
     }
 
     get id(){
-        return this._calendarEvent.id + this.title;
+        return (this._calendarEvent.id || this._calendarEvent.uid) + this.title;
     }
 
     get rawEvent(){
