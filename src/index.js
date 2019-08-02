@@ -177,7 +177,11 @@ class CalendarCard extends LitElement {
   processEvents() {
     // for some reason Lit Element is trying to sync multiple times before this is complete causing
     // duplicate events - this forces unique events only by looking at calendar event id
-    const uniqueEvents = this._allEvents.filter((event, index, self) => index === self.findIndex(e => e.id === event.id));
+    const uniqueEvents = this._allEvents.filter((event, index, self) => {
+
+      // an event might have a uid or id (caldav has uid, google has id) via calendar-card/issues/37
+      return index === self.findIndex(e => (e.id || e.uid) === (event.uid || event.id));
+    });
 
     // convert each calendar object to a UI event
     let newEvents = uniqueEvents.reduce((events, event) => {
