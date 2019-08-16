@@ -10,7 +10,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.m?js$/,
                 include: [
                     /node_modules(?:\/|\\)lit-element|lit-html/
                 ],

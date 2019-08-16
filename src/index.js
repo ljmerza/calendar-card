@@ -1,4 +1,5 @@
-import moment from 'moment/min/moment-with-locales';
+import moment from './locales';
+
 import { LitElement, html } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import { until } from 'lit-html/directives/until.js';
