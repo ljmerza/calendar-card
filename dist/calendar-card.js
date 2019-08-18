@@ -755,8 +755,9 @@ var ze=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.start
     }
 
     .day-wrapper ha-icon.progress-bar {
-        height: 12px;
-        width: 12px;
+        height: 9px;
+        width: 9px;
+        margin-top: 2px;
         color: var(--accent-color);
     }
 
