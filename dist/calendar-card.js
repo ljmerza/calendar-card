@@ -735,10 +735,6 @@ var ze=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.start
         cursor: pointer;
     }
 
-    .day-wrapper .overview .title {
-        font-size: 1.2em;
-    }
-
     .day-wrapper .overview .time,
     .day-wrapper .location ha-icon {
         color: var(--primary-color);
