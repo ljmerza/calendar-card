@@ -110,8 +110,8 @@ class CalendarCard extends LitElement {
               </td>
               <td class="overview" @click=${()=> this.getLinkHtml(event)}>
                 <div class="title">${event.title}</div>
-                ${this.getTimeHtml(event)}
                 ${this.getEventOrigin(event)}
+                ${this.getTimeHtml(event)}
                 ${this.config.progressBar ? this.getProgressBar(event) : ''}
               </td>
               <td class="location">
@@ -281,8 +281,8 @@ class CalendarCard extends LitElement {
 
     return html`
       <div class='event-origin'>
-        <ha-icon icon="mdi:calendar-blank-outline"></ha-icon> 
         <span>${event.originCalendar.name}</span>
+        <ha-icon icon="mdi:calendar-blank-outline"></ha-icon> 
       </div>
     `;
   }

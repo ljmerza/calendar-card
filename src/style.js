@@ -53,10 +53,6 @@ const style = css`
         cursor: pointer;
     }
 
-    .day-wrapper .overview .title {
-        font-size: 1.2em;
-    }
-
     .day-wrapper .overview .time,
     .day-wrapper .location ha-icon {
         color: var(--primary-color);
@@ -73,8 +69,9 @@ const style = css`
     }
 
     .day-wrapper ha-icon.progress-bar {
-        height: 12px;
-        width: 12px;
+        height: 9px;
+        width: 9px;
+        margin-top: 2px;
         color: var(--accent-color);
     }
 
@@ -84,12 +81,18 @@ const style = css`
         color: var(--accent-color);
     }
 
+    .event-origin {
+        float: right;
+    }
+
     .event-origin span {
         color: var(--accent-color);
+        margin-right: -4px;
     }
 
     .event-origin ha-icon {
-        font-size: 0.6em;
+        height: 13px;
+        margin-top: -3px;
         color: var(--accent-color);
     }
 `;
