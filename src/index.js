@@ -17,7 +17,13 @@ class CalendarCard extends LitElement {
     return {
       hass: { type: Object },
       config: { type: Object },
+      events: { type: Object },
     };
+  }
+
+  constructor(){
+    super();
+    this.events = false;
   }
 
   static async getConfigElement() {
@@ -60,15 +66,19 @@ class CalendarCard extends LitElement {
     return style;
   }
 
-  shouldUpdate() {
-    return this.cardNeedsUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15;
-  }
-
   render() {
+    this.updateCard();
+
     return html`
       <ha-card class='calendar-card'>
         ${this.createHeader()}
-        ${until(this.updateCard(), html``)}
+        ${this.events ? html`${this.events}` : 
+          html`
+            <div class='loader'>
+              <paper-spinner active></paper-spinner>
+            </div>
+          `
+        }
       </ha-card>
     `;
   }
@@ -80,6 +90,10 @@ class CalendarCard extends LitElement {
   async updateCard() {
     moment.locale(this.hass.language);
 
+    // dont update if we dont need to conserve api calls
+    if (!this.cardNeedsUpdating && moment().diff(this.lastEventsUpdate, 'seconds') < 60)
+      return;
+    
     const events = await this.getAllEvents()
     const groupedEventsByDay = this.groupEventsByDay(events);
 
@@ -119,7 +133,7 @@ class CalendarCard extends LitElement {
 
     this.cardNeedsUpdating = false;
 
-    return html`
+    this.events = html`
       <table>
         <tbody>
           ${calendar}
