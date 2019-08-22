@@ -15,8 +15,8 @@ customElements.define('calendar-card-editor', CalendarCardEditor);
 class CalendarCard extends LitElement {
   static get properties() {
     return {
-      hass: Object,
-      config: Object,
+      hass: { type: Object },
+      config: { type: Object },
     };
   }
 
@@ -64,19 +64,11 @@ class CalendarCard extends LitElement {
     return this.cardNeedsUpdating || moment().diff(this.lastEventsUpdate, 'minutes') >= 15;
   }
 
-  updated(){
-    this.cardIsUpdating = false;
-  }
-
   render() {
     return html`
       <ha-card class='calendar-card'>
         ${this.createHeader()}
-        ${until(this.updateCard(), html`
-          <div class='loader'>
-            <paper-spinner active></paper-spinner>
-          </div>
-        `)}
+        ${until(this.updateCard(), html``)}
       </ha-card>
     `;
   }
@@ -86,8 +78,6 @@ class CalendarCard extends LitElement {
    * @return {TemplateResult}
    */
   async updateCard() {
-    if (this.cardIsUpdating) return;
-    this.cardIsUpdating = true;
     moment.locale(this.hass.language);
 
     const events = await this.getAllEvents()
