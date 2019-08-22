@@ -93,7 +93,8 @@ class CalendarCard extends LitElement {
     // dont update if we dont need to conserve api calls
     if (!this.cardNeedsUpdating && moment().diff(this.lastEventsUpdate, 'seconds') < 60)
       return;
-    
+
+    this.cardNeedsUpdating = false;
     const events = await this.getAllEvents()
     const groupedEventsByDay = this.groupEventsByDay(events);
 
@@ -131,7 +132,6 @@ class CalendarCard extends LitElement {
       `;
     }, html``);
 
-    this.cardNeedsUpdating = false;
 
     this.events = html`
       <table>
