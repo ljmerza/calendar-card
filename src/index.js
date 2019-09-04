@@ -90,12 +90,12 @@ class CalendarCard extends LitElement {
   async updateCard() {
     moment.locale(this.hass.language);
 
-    // dont update if we dont need to conserve api calls
+    // dont update if we dont need it to conserve api calls
     if (!this.cardNeedsUpdating && moment().diff(this.lastEventsUpdate, 'seconds') < 60)
       return;
 
     this.cardNeedsUpdating = false;
-    const events = await this.getAllEvents()
+    const events = await this.getAllEvents();
     const groupedEventsByDay = this.groupEventsByDay(events);
 
     const calendar = groupedEventsByDay.reduce((htmlTemplate, eventDay) => {

@@ -722,7 +722,7 @@ var Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.start
 
     .day-wrapper .overview .time,
     .day-wrapper .location ha-icon {
-        color: var(--primary-color);
+        color: var(--secondary-text-color);
     }
 
     .day-wrapper hr.progress-bar {
