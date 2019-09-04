@@ -55,7 +55,7 @@ const style = css`
 
     .day-wrapper .overview .time,
     .day-wrapper .location ha-icon {
-        color: var(--primary-color);
+        color: var(--secondary-text-color);
     }
 
     .day-wrapper hr.progress-bar {
