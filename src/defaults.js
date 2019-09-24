@@ -14,4 +14,5 @@ export default {
     startFromToday: false,
     showEventOrigin: false,
     hideHeader: false,
+    highlightToday: false,
 };

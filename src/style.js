@@ -34,6 +34,10 @@ const style = css`
         width: 100%;
     }
 
+    .highlight-events .title, .highlight-events .date {
+        color: var(--accent-color) !important;
+    }
+
     .day-wrapper td {
         padding-top: 10px;
         cursor: pointer;

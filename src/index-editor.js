@@ -117,6 +117,11 @@ export default class CalendarCardEditor extends LitElement {
               .checked=${this._config.showEventOrigin}
               .configValue="${"showEventOrigin"}"
             >Show Event Origin</paper-checkbox>
+            <paper-checkbox
+              @checked-changed="${this.checkboxChanged}" 
+              .checked=${this._config.highlightToday}
+              .configValue="${"highlightToday"}"
+            >Highlight Today's Events</paper-checkbox>
           </div>
 
           <div class='other-options'>

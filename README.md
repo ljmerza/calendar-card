@@ -56,6 +56,7 @@ resources:
 | showMultiDay | boolean | **Optional** | `false` Split multiday events into per day
 | startFromToday | boolean | **Optional** | `false` Skip any events before today's date
 | showEventOrigin | boolean | **Optional** | `false` Shows what calendar each event is from
+| highlightToday | boolean | **Optional** | `false` Hightlight's today's events
 
 ## Configurations
 ---

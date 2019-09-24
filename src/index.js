@@ -100,20 +100,31 @@ class CalendarCard extends LitElement {
     const events = await this.getAllEvents();
     const groupedEventsByDay = this.groupEventsByDay(events);
 
+    // get today to see what events are today
+    const today = moment(new Date());
+
     const calendar = groupedEventsByDay.reduce((htmlTemplate, eventDay) => {
-      const momentDay = moment(eventDay.day);
+      const eventDateTime = moment(eventDay.day);
 
       // if startFromToday config then skip events that are before today's date
-      if (this.config.startFromToday && moment().startOf('day').isAfter(momentDay)){
+      if (this.config.startFromToday && moment().startOf('day').isAfter(eventDateTime)){
         return htmlTemplate;
       }
 
       // for each event in a day create template for that event
       const eventsTemplate = repeat(eventDay.events, event => event.id, (event, index) => {
+        const isLastEventInGroup = eventDay.events.length === index + 1;
+
+        // add class to last event group
+        const lastKls = isLastEventInGroup ? 'day-wrapper-last' : '';
+
+        // add class if config to hightlight today's events
+        const todayKls = this.config.highlightToday && eventDateTime.isSame(today, "day") ? 'highlight-events' : '';
+
           return html`
-            <tr class='day-wrapper ${eventDay.events.length === index + 1 ? ' day-wrapper-last' : '' }'>
-              <td class="date">
-                ${this.getDateHtml(index, momentDay)}
+            <tr class='day-wrapper ${lastKls} ${todayKls}'>
+              <td class="${isLastEventInGroup ? '' : 'date'}">
+                ${this.getDateHtml(index, eventDateTime)}
               </td>
               <td class="overview" @click=${()=> this.getLinkHtml(event)}>
                 <div class="title">${event.title}</div>
