@@ -94,7 +94,9 @@ class CalendarCard extends LitElement {
     if (!this.cardNeedsUpdating && moment().diff(this.lastEventsUpdate, 'seconds') < 60)
       return;
 
+    this.lastEventsUpdate = moment();
     this.cardNeedsUpdating = false;
+
     const events = await this.getAllEvents();
     const groupedEventsByDay = this.groupEventsByDay(events);
 
@@ -235,8 +237,6 @@ class CalendarCard extends LitElement {
 
     // sort events by date starting with soonest
     newEvents.sort((a, b) => a.startDateTime.isBefore(b.startDateTime) ? -1 : 1);
-    
-    this.lastEventsUpdate = moment();
     return newEvents;
   }
 
