@@ -15,4 +15,5 @@ export default {
     showEventOrigin: false,
     hideHeader: false,
     highlightToday: false,
+    ignoreEventsExpression: '',
 };

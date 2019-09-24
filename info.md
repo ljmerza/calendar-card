@@ -48,6 +48,7 @@ resources:
 | timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
 | dateTopFormat | string | **Optional** | `DD` Format for top line of event date
 | dateBottomFormat | string | **Optional** | `ddd` Format to bottom line of event date
+| ignoreEventsExpression | string | **Optional** | `` Simple case insensitive regex to ignore events that match title
 | progressBar | boolean | **Optional** | `false` Adds progress bar to ongoing events
 | hideTime | boolean | **Optional** | `false` Hides event time section entirely
 | showLocation | boolean | **Optional** | `false` Shows location address

@@ -152,6 +152,12 @@ export default class CalendarCardEditor extends LitElement {
               .configValue="${"dateBottomFormat"}"
               @value-changed="${this.inputChanged}"
             ></paper-input>
+            <paper-input
+              label="Ignore Events Expression"
+              .value="${this._config.ignoreEventsExpression}"
+              .configValue="${"ignoreEventsExpression"}"
+              @value-changed="${this.inputChanged}"
+            ></paper-input>
           </div>
 
           

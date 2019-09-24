@@ -205,6 +205,12 @@ class CalendarCard extends LitElement {
     let newEvents = uniqueEvents.reduce((events, event) => {
       event.originCalendar = this.config.entities.find(entity => entity.entity === event.entity.entity);
       const newEvent = new CalendarEvent(event);
+
+      // if given ignoreEventsExpression value ignore events that match this title
+      if (this.config.ignoreEventsExpression){
+        const regex = new RegExp(this.config.ignoreEventsExpression, 'i');
+        if (regex.test(newEvent.title)) return events;
+      }
       
       /**
        * if we want to split multi day events and its a multi day event then 
