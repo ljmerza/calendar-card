@@ -176,13 +176,17 @@ class CalendarCard extends LitElement {
       const calendarEntity = (entity && entity.entity) || entity;
       const url = `calendars/${calendarEntity}?start=${start}Z&end=${end}Z`;
 
-      const events = (await this.__hass.callApi('get', url))
-      .map(event => {
-        event.entity = entity;
-        return event;
-      });
+      try{
+        const events = (await this.__hass.callApi('get', url))
+        .map(event => {
+          event.entity = entity;
+          return event;
+        });
 
-      this._allEvents.push(...events);
+        this._allEvents.push(...events);
+      }catch(err){
+        throw new Error(`Couldn't load ${calendarEntity}: ${err.error}`);
+      };
     }
 
     return this.processEvents();
