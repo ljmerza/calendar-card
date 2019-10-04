@@ -100,6 +100,18 @@ class CalendarCard extends LitElement {
     const events = await this.getAllEvents();
     const groupedEventsByDay = this.groupEventsByDay(events);
 
+    // get all failed calendar retrievals
+    const failedCalendars = this._failedEntities.reduce((errorTemplate, failedEntity) => {
+      return html`
+        ${errorTemplate}
+        <tr>
+          <td class="failed-name">${failedEntity.name}</td>
+          <td class="failed-error">${failedEntity.error.error}</td>
+          <td class="failed-icon"><ha-icon icon="mdi:alert-circle-outline"></ha-icon></td>
+        </tr>
+      `;
+    }, html``);
+
     // get today to see what events are today
     const today = moment(new Date());
 
@@ -149,6 +161,7 @@ class CalendarCard extends LitElement {
     this.events = html`
       <table>
         <tbody>
+          ${failedCalendars}
           ${calendar}
         </tbody>
       </table>
@@ -191,7 +204,7 @@ class CalendarCard extends LitElement {
         })
         .catch(error => {
           this._failedEntities.push({
-            entity: calendarEntity,
+            name: this.config.entities.find(entity => entity.entity === calendarEntity).name || calendarEntity,
             error
           });
         }));
