@@ -171,19 +171,34 @@ class CalendarCard extends LitElement {
     // each entity may be a string of entity id or
     // an object with custom name given with entity id
     this._allEvents = [];
+    this._failedEntities = [];
+    const calendarEntityPromises = [];
     for(let i=0; i < this.config.entities.length; i++){
       const entity = this.config.entities[i];
       const calendarEntity = (entity && entity.entity) || entity;
       const url = `calendars/${calendarEntity}?start=${start}Z&end=${end}Z`;
 
-      const events = (await this.__hass.callApi('get', url))
-      .map(event => {
-        event.entity = entity;
-        return event;
-      });
-
-      this._allEvents.push(...events);
+      // make all requests at once
+      calendarEntityPromises[i] = (this.__hass.callApi('get', url)
+        .then(rawEvents => {
+          return rawEvents.map(event => {
+            event.entity = entity;
+            return event;
+          });
+        })
+        .then(events => {
+          this._allEvents.push(...events);
+        })
+        .catch(error => {
+          this._failedEntities.push({
+            entity: calendarEntity,
+            error
+          });
+        }));
     }
+
+    // wait untill all requests either succeed or fail
+    await Promise.all(calendarEntityPromises);
 
     return this.processEvents();
   }
