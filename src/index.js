@@ -100,6 +100,18 @@ class CalendarCard extends LitElement {
     const events = await this.getAllEvents();
     const groupedEventsByDay = this.groupEventsByDay(events);
 
+    // get all failed calendar retrievals
+    const failedCalendars = this._failedEntities.reduce((errorTemplate, failedEntity) => {
+      return html`
+        ${errorTemplate}
+        <tr>
+          <td class="failed-name">${failedEntity.name}</td>
+          <td class="failed-error">${failedEntity.error.error}</td>
+          <td class="failed-icon"><ha-icon icon="mdi:alert-circle-outline"></ha-icon></td>
+        </tr>
+      `;
+    }, html``);
+
     // get today to see what events are today
     const today = moment(new Date());
 
@@ -149,6 +161,7 @@ class CalendarCard extends LitElement {
     this.events = html`
       <table>
         <tbody>
+          ${failedCalendars}
           ${calendar}
         </tbody>
       </table>
@@ -171,19 +184,35 @@ class CalendarCard extends LitElement {
     // each entity may be a string of entity id or
     // an object with custom name given with entity id
     this._allEvents = [];
-    for(let i=0; i < this.config.entities.length; i++){
-      const entity = this.config.entities[i];
+    this._failedEntities = [];
+    const calendarEntityPromises = [];
+    this.config.entities.forEach(entity => {
       const calendarEntity = (entity && entity.entity) || entity;
       const url = `calendars/${calendarEntity}?start=${start}Z&end=${end}Z`;
 
-      const events = (await this.__hass.callApi('get', url))
-      .map(event => {
-        event.entity = entity;
-        return event;
-      });
+      // make all requests at once
+      calendarEntityPromises.push(
+        this.__hass.callApi('get', url)
+          .then(rawEvents => {
+            return rawEvents.map(event => {
+              event.entity = entity;
+              return event;
+            });
+          })
+          .then(events => {
+            this._allEvents.push(...events);
+          })
+          .catch(error => {
+            this._failedEntities.push({
+              name: entity.name || calendarEntity,
+              error
+            });
+          })
+      );
+    });
 
-      this._allEvents.push(...events);
-    }
+    // wait untill all requests either succeed or fail
+    await Promise.all(calendarEntityPromises);
 
     return this.processEvents();
   }
