@@ -236,9 +236,15 @@ class CalendarCard extends LitElement {
       const newEvent = new CalendarEvent(event);
 
       // if given ignoreEventsExpression value ignore events that match this title
-      if (this.config.ignoreEventsExpression){
+      if (this.config.ignoreEventsExpression && newEvent.title){
         const regex = new RegExp(this.config.ignoreEventsExpression, 'i');
         if (regex.test(newEvent.title)) return events;
+      }
+
+      // if given ignoreEventsByLocationExpression value ignore events that match this location
+      if (this.config.ignoreEventsByLocationExpression && newEvent.location) {
+        const regex = new RegExp(this.config.ignoreEventsByLocationExpression, 'i');
+        if (regex.test(newEvent.location)) return events;
       }
       
       /**

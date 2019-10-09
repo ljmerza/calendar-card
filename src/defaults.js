@@ -16,4 +16,5 @@ export default {
     hideHeader: false,
     highlightToday: false,
     ignoreEventsExpression: '',
+    ignoreEventsByLocationExpression: '',
 };

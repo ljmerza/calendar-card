@@ -49,6 +49,7 @@ resources:
 | dateTopFormat | string | **Optional** | `DD` Format for top line of event date
 | dateBottomFormat | string | **Optional** | `ddd` Format to bottom line of event date
 | ignoreEventsExpression | string | **Optional** | `` Simple case insensitive regex to ignore events that match title
+| ignoreEventsByLocationExpression | string | **Optional** | `` Simple case insensitive regex to ignore events that match location
 | progressBar | boolean | **Optional** | `false` Adds progress bar to ongoing events
 | hideTime | boolean | **Optional** | `false` Hides event time section entirely
 | showLocation | boolean | **Optional** | `false` Shows location address
