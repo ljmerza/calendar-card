@@ -403,7 +403,7 @@ class CalendarCard extends LitElement {
 
     const start = event.startDateTime && event.startDateTime.format(this.config.timeFormat);
     const end = event.endDateTime && event.endDateTime.format(this.config.timeFormat);
-    const date = (event.isFirstDay && `Start:${start}`) || (event.isLastDay && `End:${end}`) || (start && end  && `${start} - ${end}`) || '';
+    const date = (event.isFirstDay && `Start: ${start}`) || (event.isLastDay && `End: ${end}`) || (start && end  && `${start} - ${end}`) || '';
     return html`<div class="time">${date}</div>`;
   }
 
