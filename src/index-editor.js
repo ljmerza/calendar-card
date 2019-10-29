@@ -106,9 +106,9 @@ export default class CalendarCardEditor extends LitElement {
             >Show MultDay</paper-checkbox>
             <paper-checkbox
               @checked-changed="${this.checkboxChanged}" 
-              .configValue="${"startFromToday"}"
-              .checked=${this._config.startFromToday}
-            >Start From Today</paper-checkbox>
+              .configValue="${"showRecurring"}"
+              .checked=${this._config.showRecurring}
+            >Show Recurring</paper-checkbox>
           </div>
 
           <div class='checkbox-options'>

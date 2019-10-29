@@ -92,6 +92,14 @@ export default class CalendarEvent {
     }
 
     /**
+     * is this recurring?
+     * @return {boolean}
+     */
+    get isRecurring() {
+        return !!this._calendarEvent.recurringEventId;
+    }
+
+    /**
      * get the URL for an event
      * @return {String}
      */
