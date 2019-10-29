@@ -166,7 +166,6 @@ class CalendarCard extends LitElement {
       </table>
     `;
   }
-
 }
 
 customElements.define('calendar-card', CalendarCard);

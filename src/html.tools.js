@@ -74,7 +74,7 @@ export function getTimeHtml(event, config) {
 
     const start = event.startDateTime && event.startDateTime.format(config.timeFormat);
     const end = event.endDateTime && event.endDateTime.format(config.timeFormat);
-    const date = (event.isFirstDay && `Start:${start}`) || (event.isLastDay && `End:${end}`) || (start && end && `${start} - ${end}`) || '';
+    const date = (event.isFirstDay && `Start: ${start}`) || (event.isLastDay && `End: ${end}`) || (start && end && `${start} - ${end}`) || '';
     return html`<div class="time">${date}</div>`;
 }
 
