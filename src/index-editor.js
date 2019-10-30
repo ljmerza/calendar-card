@@ -106,9 +106,9 @@ export default class CalendarCardEditor extends LitElement {
             >Show MultDay</paper-checkbox>
             <paper-checkbox
               @checked-changed="${this.checkboxChanged}" 
-              .configValue="${"showRecurring"}"
-              .checked=${this._config.showRecurring}
-            >Show Recurring</paper-checkbox>
+              .configValue="${"hidePastEvents"}"
+              .checked=${this._config.hidePastEvents}
+            >Hide Past Events</paper-checkbox>
           </div>
 
           <div class='checkbox-options'>
@@ -122,6 +122,14 @@ export default class CalendarCardEditor extends LitElement {
               .checked=${this._config.highlightToday}
               .configValue="${"highlightToday"}"
             >Highlight Today's Events</paper-checkbox>
+          </div>
+
+          <div class='checkbox-options'>
+            <paper-checkbox
+              @checked-changed="${this.checkboxChanged}" 
+              .checked=${this._config.startFromToday}
+              .configValue="${"startFromToday"}"
+            >Start From Today</paper-checkbox>
           </div>
 
           <div class='other-options'>

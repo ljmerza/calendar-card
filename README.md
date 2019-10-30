@@ -59,7 +59,7 @@ resources:
 | startFromToday | boolean | **Optional** | `false` Skip any events before today's date
 | showEventOrigin | boolean | **Optional** | `false` Shows what calendar each event is from
 | highlightToday | boolean | **Optional** | `false` Hightlight's today's events
-| showRecurring | boolean | **Optional** | `true` If false only shows recurring event once
+| hidePastEvents | boolean | **Optional** | `false` Hide events that have passed
 
 ## Configurations
 ---
