@@ -60,6 +60,7 @@ resources:
 | showEventOrigin | boolean | **Optional** | `false` Shows what calendar each event is from
 | highlightToday | boolean | **Optional** | `false` Hightlight's today's events
 | hidePastEvents | boolean | **Optional** | `false` Hide events that have passed
+| eventsLimit | integer | **Optional** | `99` Maximum number of events to show (shows rest of day after cut off)
 
 ## Configurations
 ---

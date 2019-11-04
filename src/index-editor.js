@@ -117,6 +117,7 @@ export default class CalendarCardEditor extends LitElement {
               .checked=${this._config.showEventOrigin}
               .configValue="${"showEventOrigin"}"
             >Show Event Origin</paper-checkbox>
+            
             <paper-checkbox
               @checked-changed="${this.checkboxChanged}" 
               .checked=${this._config.highlightToday}
@@ -172,6 +173,13 @@ export default class CalendarCardEditor extends LitElement {
               label="Ignore Events By Location Expression"
               .value="${this._config.ignoreEventsByLocationExpression}"
               .configValue="${"ignoreEventsByLocationExpression"}"
+              @value-changed="${this.inputChanged}"
+            ></paper-input>
+
+            <paper-input
+              label="Maximum Number of Events to Show"
+              .value="${this._config.eventsLimit}"
+              .configValue="${"eventsLimit"}"
               @value-changed="${this.inputChanged}"
             ></paper-input>
           </div>

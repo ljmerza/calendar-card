@@ -13,6 +13,7 @@ export default {
     startFromToday: false,
     hidePastEvents: false,
     showMultiDay: false,
+    eventsLimit: 99,
     showEventOrigin: false,
     hideHeader: false,
     highlightToday: false,

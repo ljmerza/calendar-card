@@ -5,10 +5,12 @@ import CalendarEvent from './calendar-event';
 /**
   * group events by the day it's on
   * @param  {Array<CalendarEvent>} events
+  * @param  {Object} config
   * @return {Array<Object>}
   */
-export function groupEventsByDay(events) {
-    return events.reduce((groupedEvents, event) => {
+export function groupEventsByDay(events, config) {
+
+    let groupedEvents = events.reduce((groupedEvents, event) => {
         const day = moment(event.startDateTime).format('YYYY-MM-DD');
         const matchingDateIndex = groupedEvents.findIndex(group => group.day === day);
 
@@ -20,6 +22,25 @@ export function groupEventsByDay(events) {
 
         return groupedEvents;
     }, []);
+
+    // if we want to show all events for a day even if they go over the events
+    // limit then  we have to keep track of the number of events by day and
+    // stop at the END of the current day that goes over the limit
+    let numberOfEvents = 0;
+    let hasMaxedOutEvents = false;
+    groupedEvents = groupedEvents.map(group => {
+        // if we maxed out then dont worry about any other days after that
+        if (hasMaxedOutEvents) return;
+
+        // accumulate  how many events are in each day
+        numberOfEvents += group.events.length;
+
+        // did we max the number of events we want to show during this day?
+        hasMaxedOutEvents = config.eventsLimit < numberOfEvents;
+        return group;
+    }).filter(Boolean); // filter out empty days that we may have maxed out on
+    
+    return groupedEvents;
 }
 
 /**
@@ -164,8 +185,7 @@ export function processEvents(allEvents, config) {
             events = events.concat(partialEvents);
 
         } else {
-            // else just push normal event
-            events.push(newEvent)
+            events.push(newEvent);
         }
 
         return events;

@@ -40,8 +40,14 @@ class CalendarCard extends LitElement {
    * @param {[type]} config
    */
   setConfig(config) {
+    config = { ...defaultConfig, ...config };
+
     if (!config.entities || !config.entities.length) {
       throw new Error('You need to define at least one calendar entity via entities');
+    }
+
+    if (config.entities && (isNaN(config.eventsLimit) || config.eventsLimit < 0)) {
+      throw new Error('The eventsLimit option needs to be a positive number');
     }
 
     // if checked entities has changed then update events
@@ -56,7 +62,7 @@ class CalendarCard extends LitElement {
       this.cardNeedsUpdating = true;
     }
 
-    this.config = Object.assign({}, defaultConfig, config);
+    this.config = { ...config };
   }
 
   /**
@@ -103,7 +109,7 @@ class CalendarCard extends LitElement {
     this.cardNeedsUpdating = false;
 
     const { events, failedEvents } = await getAllEvents(this.config, this.__hass);
-    const groupedEventsByDay = groupEventsByDay(events);
+    const groupedEventsByDay = groupEventsByDay(events, this.config);
 
     // get all failed calendar retrievals
     const failedCalendars = failedEvents.reduce((errorTemplate, failedEntity) => {
