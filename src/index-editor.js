@@ -33,10 +33,11 @@ export default class CalendarCardEditor extends LitElement {
 
     const entityOptions = entities.map(eid => { 
       const matchingConfigEnitity = this._config.entities.find(entity => (entity && entity.entity || entity) === eid);
-
+      const originalEntity = this.hass.states[eid];
+      
       return { 
         entity: eid,
-        name: matchingConfigEnitity ? matchingConfigEnitity.name || eid : eid, 
+        name: (matchingConfigEnitity && matchingConfigEnitity.name) || originalEntity.attributes.friendly_name || eid, 
         checked: !!matchingConfigEnitity
       }
     });
@@ -49,9 +50,7 @@ export default class CalendarCardEditor extends LitElement {
   }
 
   render() {
-    if (!this.hass) {
-     return html``;
-    }
+    if (!this.hass) return html``;
 
     return html`
       <div class="card-config">
@@ -258,10 +257,8 @@ export default class CalendarCardEditor extends LitElement {
    * change the calendar name of an entity
    * @param {*} ev 
    */
-  entityNameChanged(ev){
+  entityNameChanged({ target: { entityId }, detail: { value } }){
     if (this.cantFireEvent) return;
-    const { target: { entityId }, detail: { value } } = ev;
-
     let entityObjects = [...this.entities];
 
     entityObjects = entityObjects.map(entity => {
@@ -277,14 +274,14 @@ export default class CalendarCardEditor extends LitElement {
    * add or remove calendar entities from config
    * @param {*} ev 
    */
-  entityChanged(ev){
+  entityChanged({ target: { entityId }, detail: { value } }){
     if (this.cantFireEvent) return;
-    const { target: { entityId }, detail: { value } } = ev;
-
     let entityObjects = [...this.entities];
 
     if(value){
-      entityObjects.push({ entity: entityId, name: entityId });
+      const originalEntity = this.hass.states[entityId];
+      entityObjects.push({ entity: entityId, name: originalEntity.attributes.friendly_name || entityId });
+
     } else {
       entityObjects = entityObjects.filter(entity => entity.entity !== entityId);
     }
