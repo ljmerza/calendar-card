@@ -116,7 +116,6 @@ export default class CalendarCardEditor extends LitElement {
               .checked=${this._config.showEventOrigin}
               .configValue="${"showEventOrigin"}"
             >Show Event Origin</paper-checkbox>
-            
             <paper-checkbox
               @checked-changed="${this.checkboxChanged}" 
               .checked=${this._config.highlightToday}
@@ -127,9 +126,9 @@ export default class CalendarCardEditor extends LitElement {
           <div class='checkbox-options'>
             <paper-checkbox
               @checked-changed="${this.checkboxChanged}" 
-              .checked=${this._config.startFromToday}
-              .configValue="${"startFromToday"}"
-            >Start From Today</paper-checkbox>
+              .checked=${this._config.maxHeight}
+              .configValue="${"maxHeight"}"
+            >Max Height</paper-checkbox>
           </div>
 
           <div class='other-options'>
@@ -179,6 +178,27 @@ export default class CalendarCardEditor extends LitElement {
               label="Maximum Number of Events to Show"
               .value="${this._config.eventsLimit}"
               .configValue="${"eventsLimit"}"
+              @value-changed="${this.inputChanged}"
+            ></paper-input>
+
+            <paper-input
+              label="Full Day Event Text"
+              .value="${this._config.fullDayEventText}"
+              .configValue="${"fullDayEventText"}"
+              @value-changed="${this.inputChanged}"
+            ></paper-input>
+
+            <paper-input
+              label="Start Text"
+              .value="${this._config.startText}"
+              .configValue="${"startText"}"
+              @value-changed="${this.inputChanged}"
+            ></paper-input>
+
+            <paper-input
+              label="End Text"
+              .value="${this._config.endText}"
+              .configValue="${"endText"}"
               @value-changed="${this.inputChanged}"
             ></paper-input>
           </div>

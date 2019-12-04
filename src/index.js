@@ -81,7 +81,7 @@ class CalendarCard extends LitElement {
     this.updateCard();
 
     return html`
-      <ha-card class='calendar-card'>
+      <ha-card class='calendar-card ${this.config.maxHeight ? 'max-height' : ''}'>
         ${createHeader(this.config)}
         ${this.events ? html`${this.events}` : 
           html`

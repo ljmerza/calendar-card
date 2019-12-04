@@ -56,11 +56,14 @@ resources:
 | showLocation | boolean | **Optional** | `false` Shows location address
 | showLocationIcon | boolean | **Optional** | `true` Shows map icon when event has a location
 | showMultiDay | boolean | **Optional** | `false` Split multiday events into per day
-| startFromToday | boolean | **Optional** | `false` Skip any events before today's date
 | showEventOrigin | boolean | **Optional** | `false` Shows what calendar each event is from
 | highlightToday | boolean | **Optional** | `false` Hightlight's today's events
 | hidePastEvents | boolean | **Optional** | `false` Hide events that have passed
 | eventsLimit | integer | **Optional** | `99` Maximum number of events to show (shows rest of day after cut off)
+| maxHeight | boolean | **Optional** | `false` Sets max height for card to 500px and overflows the rest
+| fullDayEventText | string | **Optional** | `All day` Set custom text for a full day event
+| startText | string | **Optional** | `Start` Set custom text for event start time
+| endText | string | **Optional** | `End` Set custom text for event end time
 
 ## Configurations
 ---

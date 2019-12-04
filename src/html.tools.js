@@ -70,11 +70,13 @@ export function getEventOrigin(event, config){
 export function getTimeHtml(event, config) {
     if (config.hideTime === true) return html``;
 
-    if (event.isAllDayEvent) return html`<div class="time">All day</div>`;
+    if (event.isAllDayEvent) {
+      return html`<div class="time">${config.fullDayEventText}</div>`;
+    }
 
     const start = event.startDateTime && event.startDateTime.format(config.timeFormat);
     const end = event.endDateTime && event.endDateTime.format(config.timeFormat);
-    const date = (event.isFirstDay && `Start: ${start}`) || (event.isLastDay && `End: ${end}`) || (start && end && `${start} - ${end}`) || '';
+    const date = (event.isFirstDay && `${config.startText}: ${start}`) || (event.isLastDay && `${config.endText}: ${end}`) || (start && end && `${start} - ${end}`) || '';
     return html`<div class="time">${date}</div>`;
 }
 
@@ -83,15 +85,19 @@ export function getTimeHtml(event, config) {
   * @param {CalendarEvent} event
   */
 export function getLocationHtml(event, config) {
-    if (!event.location || !event.locationAddress || !config.showLocationIcon)
+    if (!event.location || !event.locationAddress)
         return html``;
 
     return html`
       <a href="https://www.google.com/maps?daddr=${event.location} ${event.locationAddress}" target="_blank" rel="nofollow noreferrer noopener"
         title='open location'>
-        <div>
-          <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
-        </div>
+        ${config.showLocationIcon ? 
+          html`
+            <div>
+              <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
+            </div>
+          ` : null
+        }
         <div>
           ${config.showLocation ? event.location : ''}
         </div>

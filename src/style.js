@@ -1,10 +1,16 @@
 import { css } from 'lit-element';
 
 const style = css`
+
     .calendar-card {
         display: flex;
         padding: 0 16px 4px;
         flex-direction: column;
+    }
+
+    .max-height {
+        max-height: 500px;
+        overflow-y: scroll;
     }
 
     .loader {
@@ -77,6 +83,16 @@ const style = css`
         width: 9px;
         margin-top: 2px;
         color: var(--accent-color);
+    }
+
+    .day-wrapper .overview {
+        max-width: 150px;
+        word-break: break-word;
+    }
+
+    .day-wrapper .location {
+        max-width: 100px;
+        word-break: break-word;
     }
 
     .day-wrapper .location a {

@@ -10,7 +10,6 @@ export default {
     progressBar: false,
     showLocation: false,
     showLocationIcon: true,
-    startFromToday: false,
     hidePastEvents: false,
     showMultiDay: false,
     eventsLimit: 99,
@@ -19,4 +18,8 @@ export default {
     highlightToday: false,
     ignoreEventsExpression: '',
     ignoreEventsByLocationExpression: '',
+    maxHeight: false,
+    fullDayEventText: 'All day',
+    startText: 'Start',
+    endText: 'End',
 };

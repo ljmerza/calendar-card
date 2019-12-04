@@ -117,28 +117,10 @@ export function processEvents(allEvents, config) {
         return index === self.findIndex(e => (e.id || e.uid) === (event.uid || event.id));
     });
 
-    const today = moment().startOf('day');
-    const now = moment();
-
     // convert each calendar object to a UI event
     let newEvents = uniqueEvents.reduce((events, caldavEvent) => {
         caldavEvent.originCalendar = config.entities.find(entity => entity.entity === caldavEvent.entity.entity);
         const newEvent = new CalendarEvent(caldavEvent);
-
-        // if config to hide passsed events then check that now
-        if (config.hidePastEvents && newEvent.endDateTime.isBefore(now)) {
-            return events;
-        }
-
-        // if startFromToday config then skip events that are before today's date
-        if (config.startFromToday && today.isAfter(newEvent.endDateTime)) {
-            return events;
-        }
-
-        // if config to hide passsed events then check that now
-        if (config.hidePastEvents && newEvent.endDateTime.isBefore(now)) {
-            return events;
-        }
 
         // if given ignoreEventsExpression value ignore events that match this title
         if (config.ignoreEventsExpression && newEvent.title) {
@@ -190,6 +172,14 @@ export function processEvents(allEvents, config) {
 
         return events;
     }, []);
+
+    // now that we have all events filter any events from config settings
+    
+    // if config to hide passed events then check that now
+    if (config.hidePastEvents) {
+        const now = moment();
+        newEvents = newEvents.filter(event => event.endDateTime.isAfter(now));
+    }
 
     // sort events by date starting with soonest
     newEvents.sort((a, b) => a.startDateTime.isBefore(b.startDateTime) ? -1 : 1);

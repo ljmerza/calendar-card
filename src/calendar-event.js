@@ -6,23 +6,21 @@ import moment from './moment';
  * There can be Google Events and CalDav Events. This class normalizes those
  */
 export default class CalendarEvent {
-    /**
-     * @param  {Object} calendarEvent
-     */
+
     constructor(calendarEvent) {
         this._calendarEvent = calendarEvent;
-    }
-
-    get id(){
-        return (this._calendarEvent.id || this._calendarEvent.uid) + this.title;
     }
 
     get rawEvent(){
         return this._calendarEvent;
     }
 
+    get id() {
+        return (this.rawEvent.id || this.rawEvent.uid) + this.title;
+    }
+
     get originCalendar(){
-        return this._calendarEvent.originCalendar;
+        return this.rawEvent.originCalendar;
     }
 
     /**
@@ -31,7 +29,7 @@ export default class CalendarEvent {
      */
     get startDateTime() {
         if (this._startDateTime === undefined){
-            const date = this._calendarEvent.start && this._calendarEvent.start.date || this._calendarEvent.start.dateTime || this._calendarEvent.start || '';
+            const date = this.rawEvent.start && this.rawEvent.start.date || this.rawEvent.start.dateTime || this.rawEvent.start || '';
             this._startDateTime =  this._processDate(date);
         }
         return this._startDateTime;
@@ -43,26 +41,26 @@ export default class CalendarEvent {
      */
     get endDateTime() {
         if (this._endDateTime === undefined) {
-            const date = this._calendarEvent.end && this._calendarEvent.end.date || this._calendarEvent.end.dateTime || this._calendarEvent.end;
+            const date = this.rawEvent.end && this.rawEvent.end.date || this.rawEvent.end.dateTime || this.rawEvent.end;
             this._endDateTime = this._processDate(date, true);
         }
         return this._endDateTime;
     }
 
     get addDays(){
-        return this._calendarEvent.addDays !== undefined ? this._calendarEvent.addDays : false;
+        return this.rawEvent.addDays !== undefined ? this.rawEvent.addDays : false;
     }
 
     get daysLong() {
-        return this._calendarEvent.daysLong;
+        return this.rawEvent.daysLong;
     }
 
     get isFirstDay(){
-        return this._calendarEvent.addDays === 0;
+        return this.rawEvent.addDays === 0;
     }
 
     get isLastDay(){
-        return this._calendarEvent.addDays === (this._calendarEvent.daysLong - 1);
+        return this.rawEvent.addDays === (this.rawEvent.daysLong - 1);
     }
 
     /**
@@ -96,7 +94,7 @@ export default class CalendarEvent {
      * @return {boolean}
      */
     get isRecurring() {
-        return !!this._calendarEvent.recurringEventId;
+        return !!this.rawEvent.recurringEventId;
     }
 
     /**
@@ -104,7 +102,7 @@ export default class CalendarEvent {
      * @return {String}
      */
     get htmlLink() {
-        return this._calendarEvent.htmlLink || '';
+        return this.rawEvent.htmlLink || '';
     }
 
     /**
@@ -121,9 +119,9 @@ export default class CalendarEvent {
      * @return {String}
      */
     get title() {
-        let title = this._calendarEvent.summary || this._calendarEvent.title || '';
+        let title = this.rawEvent.summary || this.rawEvent.title || '';
 
-        if (this._calendarEvent.daysLong){
+        if (this.rawEvent.daysLong){
             title += ` (${this.addDays + 1}/${this.daysLong})`;
         }
 
@@ -135,7 +133,7 @@ export default class CalendarEvent {
      * @return {String}
      */
     get description() {
-        return this._calendarEvent.description;
+        return this.rawEvent.description;
     }
 
     /**
@@ -143,8 +141,8 @@ export default class CalendarEvent {
      * @return {String}
      */
     get location() {
-        if (!this._calendarEvent.location) return '';
-        return this._calendarEvent.location.split(',')[0] || '';
+        if (!this.rawEvent.location) return '';
+        return this.rawEvent.location.split(',')[0] || '';
     }
 
     /**
@@ -152,9 +150,9 @@ export default class CalendarEvent {
      * @return {String}
      */
     get locationAddress() {
-        if (!this._calendarEvent.location) return '';
+        if (!this.rawEvent.location) return '';
 
-        const address = this._calendarEvent.location.substring(this._calendarEvent.location.indexOf(',') + 1);
+        const address = this.rawEvent.location.substring(this.rawEvent.location.indexOf(',') + 1);
         return address.split(' ').join('+');
     }
 
