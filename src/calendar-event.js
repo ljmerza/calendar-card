@@ -69,20 +69,22 @@ export default class CalendarEvent {
      * @param {boolean} isEndDate
      */
     _processDate(date, isEndDate=false){
-        if (date) {
-            date = moment(date);
-            // add days to a start date for multi day event
-            if (this.addDays !== false) {
-                if (!isEndDate && this.addDays) date = date.add(this.addDays, 'days');
+        if (!date) return date;
 
-                // if first day and end time then set to end of current event day that day
-                if (this.isFirstDay && isEndDate) {
-                    date = moment(this.startDateTime).endOf('day');
+        date = moment(date);
 
-                } else if (this.isLastDay && !isEndDate) {
-                    // if last day and start time then set start as start of day
-                    date = date.startOf('day');
-                }
+        // add days to a start date for multi day event
+        if (this.addDays !== false) {
+            if (!isEndDate && this.addDays) date = date.add(this.addDays, 'days');
+
+            // if not the last day and we are modifying the endDateTime then 
+            // set end dateTimeDate as end of start day for that partial event
+            if (!this.isLastDay && isEndDate) {
+                date = moment(this.startDateTime).endOf('day');
+
+            } else if (this.isLastDay && !isEndDate) {
+                // if last day and start time then set start as start of day
+                date = date.startOf('day');
             }
         }
 

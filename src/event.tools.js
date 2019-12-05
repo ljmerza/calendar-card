@@ -173,7 +173,9 @@ export function processEvents(allEvents, config) {
         return events;
     }, []);
 
-    // now that we have all events filter any events from config settings
+    // remove events before today
+    const today = moment().startOf('day');
+    newEvents = newEvents.filter(event => event.endDateTime.isAfter(today));
     
     // if config to hide passed events then check that now
     if (config.hidePastEvents) {
