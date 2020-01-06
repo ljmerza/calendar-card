@@ -753,7 +753,6 @@ var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.st
     }
 
     .day-wrapper .overview {
-        max-width: 150px;
         word-break: break-word;
     }
 

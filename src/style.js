@@ -86,7 +86,6 @@ const style = css`
     }
 
     .day-wrapper .overview {
-        max-width: 150px;
         word-break: break-word;
     }
 
