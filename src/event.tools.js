@@ -37,6 +37,14 @@ export function groupEventsByDay(events, config) {
 
         // did we max the number of events we want to show during this day?
         hasMaxedOutEvents = config.eventsLimit < numberOfEvents;
+
+        // if we maxed out events by default we show the rest of the curent day's events
+        // even if they go over max - but if this config is true then dont goover max no matter what
+        if (config.hardLimit){
+            const numberOfEventsOver = numberOfEvents - config.eventsLimit;
+            group.events = group.events.slice(0, group.events.length - numberOfEventsOver);
+        }
+
         return group;
     }).filter(Boolean); // filter out empty days that we may have maxed out on
     

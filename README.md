@@ -60,6 +60,7 @@ resources:
 | highlightToday | boolean | **Optional** | `false` Hightlight's today's events
 | hidePastEvents | boolean | **Optional** | `false` Hide events that have passed
 | eventsLimit | integer | **Optional** | `99` Maximum number of events to show (shows rest of day after cut off)
+| hardLimit | boolean | **Optional** | `false` Overrides `eventsLimit` default of showing rest of day's events even after cutoff
 | maxHeight | boolean | **Optional** | `false` Sets max height for card to 500px and overflows the rest
 | fullDayEventText | string | **Optional** | `All day` Set custom text for a full day event
 | startText | string | **Optional** | `Start` Set custom text for event start time

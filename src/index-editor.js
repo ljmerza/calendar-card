@@ -126,9 +126,17 @@ export default class CalendarCardEditor extends LitElement {
           <div class='checkbox-options'>
             <paper-checkbox
               @checked-changed="${this.checkboxChanged}" 
-              .checked=${this._config.maxHeight}
-              .configValue="${"maxHeight"}"
-            >Max Height</paper-checkbox>
+              .checked=${this._config.showEventOrigin}
+              .configValue="${"showEventOrigin"}"
+            >Show Event Origin</paper-checkbox>
+          </div>
+
+          <div class='checkbox-options'>
+            <paper-checkbox
+              @checked-changed="${this.checkboxChanged}" 
+              .checked=${this._config.hardLimit}
+              .configValue="${"hardLimit"}"
+            >Hard Limit</paper-checkbox>
           </div>
 
           <div class='other-options'>
