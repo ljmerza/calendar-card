@@ -146,6 +146,11 @@ export default class CalendarCardEditor extends LitElement {
               .checked=${this._config.hideDeclined}
               .configValue="${"hideDeclined"}"
             >Hide Declined Events</paper-checkbox>
+            <paper-checkbox
+              @checked-changed="${this.checkboxChanged}" 
+              .checked=${this._config.disableLinks}
+              .configValue="${"disableLinks"}"
+            >Disable Links</paper-checkbox>
           </div>
 
           <div class='entities'>

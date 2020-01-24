@@ -34,6 +34,10 @@ const style = css`
         padding: 24px 0px 0px;
     }
 
+    .no-pointer {
+        cursor: default !important;
+    }
+
     table {
         border-spacing: 0;
         margin-bottom: 10px;

@@ -52,13 +52,12 @@ export function groupEventsByDay(events, config) {
 }
 
 /**
-  * opens a calendar event in a new tab if has link
+  * opens a link in a new tab if config allows it
   * @param {CalendarEvent} event
   */
-export function getLinkHtml(event) {
-    if (event.htmlLink) {
-        window.open(event.htmlLink);
-    }
+export function openLink(e, link, config) {
+    if (!link || config.disableLinks) return;
+    window.open(link);
 }
 
 export async function sendNotificationForNewEvents(config, hass, events, oldEvents) {

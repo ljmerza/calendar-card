@@ -1,7 +1,7 @@
 import { html } from 'lit-element';
 import moment from './locales';
 
-import { getEventDateTime } from './event.tools';
+import { getEventDateTime, openLink } from './event.tools';
 
 /**
   * create card header
@@ -75,26 +75,36 @@ export function getTimeHtml(event, config) {
 }
 
 /**
+ * generate link for an Anchor element
+ * @param {Config} config 
+ * @param String} link 
+ */
+export const getLink = (config, link) => {
+  if (config.disableLinks) return '#';
+  else link;
+}
+
+/**
   * generate the html for showing an event location
   * @param {CalendarEvent} event
   */
 export function getLocationHtml(event, config) {
-    if (!event.location || !event.locationAddress)
-        return html``;
+  if (!event.location || !event.locationAddress) return html``;
+      
+  const link = `https://www.google.com/maps?daddr=${event.location} ${event.locationAddress}`;
 
-    return html`
-      <a href="https://www.google.com/maps?daddr=${event.location} ${event.locationAddress}" target="_blank" rel="nofollow noreferrer noopener"
-        title='open location'>
-        ${config.showLocationIcon ? 
-          html`
-            <div>
-              <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
-            </div>
-          ` : null
-        }
-        <div>
-          ${config.showLocation ? event.location : ''}
-        </div>
-      </a>
-    `;
+  return html`
+    <a @click=${e => openLink(e, link, config)} title='open location' class=${config.disableLinks ? 'no-pointer' : ''}>
+      ${config.showLocationIcon ? 
+        html`
+          <div>
+            <ha-icon icon="mdi:map-marker"></ha-icon>&nbsp;
+          </div>
+        ` : null
+      }
+      <div>
+        ${config.showLocation ? event.location : ''}
+      </div>
+    </a>
+  `;
 }

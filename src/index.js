@@ -4,7 +4,7 @@ import { LitElement, html } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import packageJson from '../package.json';
 
-import { groupEventsByDay, getLinkHtml, getAllEvents, sendNotificationForNewEvents } from './event.tools';
+import { groupEventsByDay, openLink, getAllEvents, sendNotificationForNewEvents } from './event.tools';
 
 import { 
   getLocationHtml, createHeader, getDateHtml, 
@@ -145,12 +145,14 @@ class CalendarCard extends LitElement {
         const eventDateTime = moment(eventDay.day);
         const todayKls = this.config.highlightToday && eventDateTime.isSame(today, "day") ? 'highlight-events' : '';
 
+        const disableLink = this.config.disableLinks || !event.htmlLink;
+        
           return html`
             <tr class='day-wrapper ${lastKls} ${todayKls}'>
               <td class="${isLastEventInGroup ? '' : 'date'}">
                 ${getDateHtml(index, eventDateTime, this.config)}
               </td>
-              <td class="overview" @click=${()=> getLinkHtml(event)}>
+              <td class="overview ${disableLink ? 'no-pointer' : ''}" @click=${e => openLink(e, event.htmlLink, this.config)}>
                 <div class="title">${event.title}</div>
                 ${getEventOrigin(event, this.config)}
                 ${getTimeHtml(event, this.config)}

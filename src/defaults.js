@@ -23,6 +23,7 @@ export default {
     hardLimit: false,
     hideDeclined: false,
     notifyEntity: null,
+    disableLinks: false,
     notifyDateTimeFormat: 'MM/DD/YYYY HH:mma',
     fullDayEventText: 'All day',
     startText: 'Start',

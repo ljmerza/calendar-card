@@ -43,33 +43,34 @@ resources:
 | Name | Type | Requirement | Description
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:calendar-card`
-| title | string | **Optional** | `Calendar` Header shown at top of card
-| hideHeader | boolean | **Optional** | `false` Hide the header regardless of value
-| numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | entities | object | **Required** | List of calendars to display
-| timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
 | dateTopFormat | string | **Optional** | `DD` Format for top line of event date
 | dateBottomFormat | string | **Optional** | `ddd` Format to bottom line of event date
-| ignoreEventsExpression | string | **Optional** | Simple case insensitive regex to ignore events that match title
+| disableLinks | boolean | **Optional** | `false` Disables all links (to open calendar and location)
+| endText | string | **Optional** | `End` Set custom text for event end time
+| eventsLimit | integer | **Optional** | `99` Maximum number of events to show (shows rest of day after cut off)
+| fullDayEventText | string | **Optional** | `All day` Set custom text for a full day event
+| hardLimit | boolean | **Optional** | `false` Overrides `eventsLimit` default of showing rest of day's events even after cutoff
+| hideDeclined | boolean | **Optional** | `false` Hides events that you declined
+| hideHeader | boolean | **Optional** | `false` Hide the header regardless of value
+| hidePastEvents | boolean | **Optional** | `false` Hide events that have passed
+| hideTime | boolean | **Optional** | `false` Hides event time section entirely
+| highlightToday | boolean | **Optional** | `false` Hightlight's today's events
 | ignoreEventsByLocationExpression | string | **Optional** | Simple case insensitive regex to ignore events that match location
+| ignoreEventsExpression | string | **Optional** | Simple case insensitive regex to ignore events that match title
+| maxHeight | boolean | **Optional** | `false` Sets max height for card to 500px and overflows the rest
+| notifyEntity | Entity | **Optional** | Send a notification on new events
+| notifyDateTimeFormat | string | **Optional** | `MM/DD/YYYY HH:mma` Format for event date/time in notify message (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
+| numberOfDays | number | **Optional** | `7` Number of days to display from calendars
 | removeFromEventTitle | string | **Optional** | Removes substring from all event titles (case insensitive)
 | progressBar | boolean | **Optional** | `false` Adds progress bar to ongoing events
-| hideTime | boolean | **Optional** | `false` Hides event time section entirely
+| showEventOrigin | boolean | **Optional** | `false` Shows what calendar each event is from
 | showLocation | boolean | **Optional** | `false` Shows location address
 | showLocationIcon | boolean | **Optional** | `true` Shows map icon when event has a location
 | showMultiDay | boolean | **Optional** | `false` Split multiday events into per day
-| showEventOrigin | boolean | **Optional** | `false` Shows what calendar each event is from
-| highlightToday | boolean | **Optional** | `false` Hightlight's today's events
-| hidePastEvents | boolean | **Optional** | `false` Hide events that have passed
-| eventsLimit | integer | **Optional** | `99` Maximum number of events to show (shows rest of day after cut off)
-| hardLimit | boolean | **Optional** | `false` Overrides `eventsLimit` default of showing rest of day's events even after cutoff
-| hideDeclined | boolean | **Optional** | `false` Hides events that you declined
-| maxHeight | boolean | **Optional** | `false` Sets max height for card to 500px and overflows the rest
-| fullDayEventText | string | **Optional** | `All day` Set custom text for a full day event
 | startText | string | **Optional** | `Start` Set custom text for event start time
-| endText | string | **Optional** | `End` Set custom text for event end time
-| notifyEntity | Entity | **Optional** | Send a notification on new events
-| notifyDateTimeFormat | string | **Optional** | `MM/DD/YYYY HH:mma` Format for event date/time in notify message (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
+| title | string | **Optional** | `Calendar` Header shown at top of card
+| timeFormat | string | **Optional** | `HH:mm` Format to show event time (see [here](https://momentjs.com/docs/#/displaying/format/) for options)
 
 ## Configurations
 ---
