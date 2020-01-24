@@ -188,6 +188,13 @@ export default class CalendarCardEditor extends LitElement {
             ></paper-input>
 
             <paper-input
+              label="Remove From Event Title"
+              .value="${this._config.removeFromEventTitle}"
+              .configValue="${"removeFromEventTitle"}"
+              @value-changed="${this.inputChanged}"
+            ></paper-input>
+
+            <paper-input
               label="Maximum Number of Events to Show"
               .value="${this._config.eventsLimit}"
               .configValue="${"eventsLimit"}"

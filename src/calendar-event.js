@@ -133,6 +133,12 @@ export default class CalendarEvent {
             title += ` (${this.addDays + 1}/${this.daysLong})`;
         }
 
+        // if given config then remove piece of text from all event titles
+        if (this._config.removeFromEventTitle){
+            const regEx = new RegExp(this._config.removeFromEventTitle, 'i');
+            title = title.replace(regEx, '');
+        }
+
         return title;
     }
 

@@ -2,6 +2,7 @@ import moment from './locales';
 
 import { LitElement, html } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
+import packageJson from '../package.json';
 
 import { groupEventsByDay, getLinkHtml, getAllEvents } from './event.tools';
 
@@ -16,9 +17,8 @@ import defaultConfig from './defaults';
 import CalendarCardEditor from './index-editor';
 customElements.define('calendar-card-editor', CalendarCardEditor);
 
-const CARD_VERSION = '3.105.0';
 /* eslint no-console: 0 */
-console.info(`%c  CALENDAR-CARD \n%c  Version ${CARD_VERSION} `, "color: orange; font-weight: bold; background: black", "color: white; font-weight: bold; background: dimgray");
+console.info(`%c  CALENDAR-CARD   \n%c  Version ${packageJson.version} `, "color: orange; font-weight: bold; background: black", "color: white; font-weight: bold; background: dimgray");
 
 
 class CalendarCard extends LitElement {

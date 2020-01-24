@@ -18,6 +18,7 @@ export default {
     highlightToday: false,
     ignoreEventsExpression: '',
     ignoreEventsByLocationExpression: '',
+    removeFromEventTitle: '',
     maxHeight: false,
     hardLimit: false,
     hideDeclined: false,
