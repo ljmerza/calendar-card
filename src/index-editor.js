@@ -49,6 +49,10 @@ export default class CalendarCardEditor extends LitElement {
     this._firstRendered = true;
   }
 
+  get entityNotifyOptions() {
+    return Object.keys(this.hass.services.notify).sort();
+  }
+
   render() {
     if (!this.hass) return html``;
 
@@ -144,6 +148,34 @@ export default class CalendarCardEditor extends LitElement {
             >Hide Declined Events</paper-checkbox>
           </div>
 
+          <div class='entities'>
+            <h3>Entities</h3>
+            ${
+              this.entityOptions.map(entity => {
+                return html`
+                  <paper-checkbox 
+                    @checked-changed="${this.entityChanged}" 
+                    .checked=${entity.checked}
+                    .entityId="${entity.entity}"
+                  >${entity.entity}</paper-checkbox>
+
+                  ${this._config.showEventOrigin ?
+                    html`
+                    <div class='origin-calendar'>
+                      <paper-input
+                        label="Calendar Origin"
+                        .value="${entity.name}"
+                        .entityId="${entity.entity}"
+                        @value-changed="${this.entityNameChanged}"
+                      ></paper-input>
+                    </div>
+                  ` : html``
+                  }
+                `;
+              })
+            }
+          </div>
+
           <div class='other-options'>
             <paper-input
               label="Number Of Days"
@@ -223,36 +255,32 @@ export default class CalendarCardEditor extends LitElement {
             ></paper-input>
           </div>
 
-          
+
+          <paper-dropdown-menu
+            label="Notify Entity"
+            @value-changed="${this.inputChanged}" 
+            .configValue="${"notifyEntity"}"
+          >
+            <paper-listbox 
+              slot="dropdown-content" 
+              .selected="${this.entityNotifyOptions.indexOf(this._config.notifyEntity)}"
+            >
+              ${
+                this.entityNotifyOptions.map(entity => {
+                  return html`<paper-item>${entity}</paper-item>`;
+                })
+              }
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <paper-input
+            label="Notify Date/Time Format"
+            .value="${this._config.notifyDateTimeFormat}"
+            .configValue="${"notifyDateTimeFormat"}"
+            @value-changed="${this.inputChanged}"
+          ></paper-input>
         </div>
 
-        <div class='entities'>
-          <h3>Entities</h3>
-          ${
-            this.entityOptions.map(entity => {
-              return html`
-                <paper-checkbox 
-                  @checked-changed="${this.entityChanged}" 
-                  .checked=${entity.checked}
-                  .entityId="${entity.entity}"
-                >${entity.entity}</paper-checkbox>
-
-                ${this._config.showEventOrigin ? 
-                  html`
-                    <div class='origin-calendar'>
-                      <paper-input
-                        label="Calendar Origin"
-                        .value="${entity.name}"
-                        .entityId="${entity.entity}"
-                        @value-changed="${this.entityNameChanged}"
-                      ></paper-input>
-                    </div>
-                  ` : html``
-                }
-              `;
-            })
-          }
-        </div>
       </div>
     `;
   }

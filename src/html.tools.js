@@ -1,6 +1,7 @@
 import { html } from 'lit-element';
 import moment from './locales';
 
+import { getEventDateTime } from './event.tools';
 
 /**
   * create card header
@@ -69,14 +70,7 @@ export function getEventOrigin(event, config){
   */
 export function getTimeHtml(event, config) {
     if (config.hideTime === true) return html``;
-
-    if (event.isAllDayEvent) {
-      return html`<div class="time">${config.fullDayEventText}</div>`;
-    }
-
-    const start = event.startDateTime && event.startDateTime.format(config.timeFormat);
-    const end = event.endDateTime && event.endDateTime.format(config.timeFormat);
-    const date = (event.isFirstDay && `${config.startText}: ${start}`) || (event.isLastDay && `${config.endText}: ${end}`) || (start && end && `${start} - ${end}`) || '';
+    const date = getEventDateTime(event, config, config.timeFormat);
     return html`<div class="time">${date}</div>`;
 }
 

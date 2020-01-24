@@ -22,6 +22,8 @@ export default {
     maxHeight: false,
     hardLimit: false,
     hideDeclined: false,
+    notifyEntity: null,
+    notifyDateTimeFormat: 'MM/DD/YYYY HH:mma',
     fullDayEventText: 'All day',
     startText: 'Start',
     endText: 'End',

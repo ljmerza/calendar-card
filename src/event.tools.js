@@ -61,6 +61,46 @@ export function getLinkHtml(event) {
     }
 }
 
+export async function sendNotificationForNewEvents(config, hass, events, oldEvents) {
+    if (!oldEvents || !config.notifyEntity) return events;
+
+    const newEvents = events.filter(event => {
+        const alreadyExisted = oldEvents.find(oldEvent => oldEvent.id === event.id);
+        return !alreadyExisted;
+    });
+    
+    for await(const newEvent of newEvents){
+        try {
+            const title = `New Calendar Event: ${newEvent.title}`;
+            const message = getEventDateTime(newEvent, config, config.notifyDateTimeFormat);
+            await hass.callService('notify', config.notifyEntity, { title, message });
+
+        } catch(e){
+            console.error(e);
+        }
+    }
+
+    return events;
+}
+ 
+/**
+ * converts an event's start/end datetime objects into a UI string
+ * @param {CalendarEvent} event 
+ * @param {Config} config 
+ * @param {String} timeFormat 
+ * @return {String}
+ */
+export const getEventDateTime = (event, config, timeFormat) => {
+    if (event.isAllDayEvent){
+        return config.fullDayEventText;
+    }
+
+    const start = event.startDateTime && event.startDateTime.format(timeFormat);
+    const end = event.endDateTime && event.endDateTime.format(timeFormat);
+
+    const date = (event.isFirstDay && `${config.startText}: ${start}`) || (event.isLastDay && `${config.endText}: ${end}`) || (start && end && `${start} - ${end}`) || '';
+    return date;
+}
 
 
 /**

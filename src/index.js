@@ -4,7 +4,7 @@ import { LitElement, html } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 import packageJson from '../package.json';
 
-import { groupEventsByDay, getLinkHtml, getAllEvents } from './event.tools';
+import { groupEventsByDay, getLinkHtml, getAllEvents, sendNotificationForNewEvents } from './event.tools';
 
 import { 
   getLocationHtml, createHeader, getDateHtml, 
@@ -106,14 +106,16 @@ class CalendarCard extends LitElement {
     moment.locale(this.hass.language);
 
     // dont update if we dont need it to conserve api calls
-    if (!this.cardNeedsUpdating && moment().diff(this.lastEventsUpdate, 'seconds') < 60)
-      return;
+    if (!this.cardNeedsUpdating && moment().diff(this.lastEventsUpdate, 'seconds') < 60) return;
 
     this.lastEventsUpdate = moment();
     this.cardNeedsUpdating = false;
 
     const { events, failedEvents } = await getAllEvents(this.config, this.__hass);
     const groupedEventsByDay = groupEventsByDay(events, this.config);
+    
+    // send notification of any new events if setup
+    this.oldEvents = await sendNotificationForNewEvents(this.config, this.__hass, events, this.oldEvents);
 
     // get all failed calendar retrievals
     const failedCalendars = failedEvents.reduce((errorTemplate, failedEntity) => {
