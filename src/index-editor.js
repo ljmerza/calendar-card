@@ -129,14 +129,19 @@ export default class CalendarCardEditor extends LitElement {
               .checked=${this._config.showEventOrigin}
               .configValue="${"showEventOrigin"}"
             >Show Event Origin</paper-checkbox>
-          </div>
-
-          <div class='checkbox-options'>
             <paper-checkbox
               @checked-changed="${this.checkboxChanged}" 
               .checked=${this._config.hardLimit}
               .configValue="${"hardLimit"}"
             >Hard Limit</paper-checkbox>
+          </div>
+
+          <div class='checkbox-options'>
+            <paper-checkbox
+              @checked-changed="${this.checkboxChanged}" 
+              .checked=${this._config.hideDeclined}
+              .configValue="${"hideDeclined"}"
+            >Hide Declined Events</paper-checkbox>
           </div>
 
           <div class='other-options'>

@@ -7,8 +7,9 @@ import moment from './moment';
  */
 export default class CalendarEvent {
 
-    constructor(calendarEvent) {
+    constructor(calendarEvent, config) {
         this._calendarEvent = calendarEvent;
+        this._config = config;
     }
 
     get rawEvent(){
@@ -97,6 +98,11 @@ export default class CalendarEvent {
      */
     get isRecurring() {
         return !!this.rawEvent.recurringEventId;
+    }
+
+    get isDeclined() {
+        const attendees = this.rawEvent.attendees || [];
+        return attendees.filter(a => a.self && a.responseStatus === 'declined').length !== 0;
     }
 
     /**

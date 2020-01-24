@@ -20,6 +20,7 @@ export default {
     ignoreEventsByLocationExpression: '',
     maxHeight: false,
     hardLimit: false,
+    hideDeclined: false,
     fullDayEventText: 'All day',
     startText: 'Start',
     endText: 'End',

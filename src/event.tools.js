@@ -128,13 +128,16 @@ export function processEvents(allEvents, config) {
     // convert each calendar object to a UI event
     let newEvents = uniqueEvents.reduce((events, caldavEvent) => {
         caldavEvent.originCalendar = config.entities.find(entity => entity.entity === caldavEvent.entity.entity);
-        const newEvent = new CalendarEvent(caldavEvent);
+        const newEvent = new CalendarEvent(caldavEvent, config);
 
         // if given ignoreEventsExpression value ignore events that match this title
         if (config.ignoreEventsExpression && newEvent.title) {
             const regex = new RegExp(config.ignoreEventsExpression, 'i');
             if (regex.test(newEvent.title)) return events;
         }
+
+        // if ide declined events then filter out events you have declined
+        if (config.hideDeclined && newEvent.isDeclined) return events;
 
         // if given ignoreEventsByLocationExpression value ignore events that match this location
         if (config.ignoreEventsByLocationExpression && newEvent.location) {
@@ -164,7 +167,7 @@ export function processEvents(allEvents, config) {
                 copiedEvent.addDays = i;
                 copiedEvent.daysLong = daysLong;
 
-                const partialEvent = new CalendarEvent(copiedEvent);
+                const partialEvent = new CalendarEvent(copiedEvent, config);
 
                 // only add event if starting before the config numberOfDays
                 if (endDate.isAfter(partialEvent.startDateTime)) {
