@@ -22,6 +22,9 @@ Show Google calendar events
 * Language support
 * Progress bar for ongoing events
 * Split multiday events
+* Notifications of new events
+* Customize date time formats
+* Enable kiosk mode (no click events)
 
 
 ## Prerequisites
