@@ -158,24 +158,28 @@ export default class CalendarCardEditor extends LitElement {
             ${
               this.entityOptions.map(entity => {
                 return html`
-                  <paper-checkbox 
-                    @checked-changed="${this.entityChanged}" 
-                    .checked=${entity.checked}
-                    .entityId="${entity.entity}"
-                  >${entity.entity}</paper-checkbox>
+                  <div class='entity-select'>
+                    <paper-checkbox 
+                      @checked-changed="${this.entityChanged}" 
+                      .checked=${entity.checked}
+                      .entityId="${entity.entity}"
+                    >
+                      ${entity.entity}
+                    </paper-checkbox>
 
-                  ${this._config.showEventOrigin ?
-                    html`
-                    <div class='origin-calendar'>
-                      <paper-input
-                        label="Calendar Origin"
-                        .value="${entity.name}"
-                        .entityId="${entity.entity}"
-                        @value-changed="${this.entityNameChanged}"
-                      ></paper-input>
-                    </div>
-                  ` : html``
-                  }
+                    ${this._config.showEventOrigin ?
+                      html`
+                        <div class='origin-calendar'>
+                          <paper-input
+                            label="Calendar Origin"
+                            .value="${entity.name}"
+                            .entityId="${entity.entity}"
+                            @value-changed="${this.entityNameChanged}"
+                          ></paper-input>
+                        </div>
+                      ` : html``
+                    }
+                  </div>
                 `;
               })
             }

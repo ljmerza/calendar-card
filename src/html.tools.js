@@ -54,11 +54,11 @@ export function getProgressBar(event) {
 }
 
 export function getEventOrigin(event, config){
-    if (!config.showEventOrigin || !event.originCalendar || !event.originCalendar.name) return html``;
+    if (!config.showEventOrigin) return html``;
 
     return html`
       <div class='event-origin'>
-        <span>${event.originCalendar.name}</span>
+        <span>${event.originName}</span>
         <ha-icon icon="mdi:calendar-blank-outline"></ha-icon> 
       </div>
     `;

@@ -24,6 +24,25 @@ export default class CalendarEvent {
         return this.rawEvent.originCalendar;
     }
 
+    get entity() {
+        return this._calendarEvent.hassEntity || {};
+    }
+
+    get originName() {
+        const originCalendar = this.originCalendar;
+        if (originCalendar && originCalendar.name) 
+            return originCalendar.name;
+
+        const entity = this.entity;
+        if (entity && entity.attributes && entity.attributes.friendly_name) 
+            return entity.attributes.friendly_name;
+
+        if (originCalendar && originCalendar.entity) 
+            return originCalendar.entity;
+
+        return entity && entity.entity || entity || 'Unknown';
+    }
+
     /**
      * get the start time for an event
      * @return {String}

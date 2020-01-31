@@ -2,13 +2,18 @@ import { css } from 'lit-element';
 
 const style = css`
     .entities {
-        padding-top: 10px;
+        margin-top: 30px;
+        margin-top: 30px;
     }
 
     .entities paper-checkbox {
         display: block;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
         margin-left: 10px;
+    }
+
+    .entity-select {
+        margin-top: 20px;
     }
 
     .checkbox-options:first-of-type {

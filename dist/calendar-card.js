@@ -667,7 +667,7 @@ var be="adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prot
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.startNode,s=a.insertBefore(p(),n);a.insertBefore(p(),n);var r=new C(e.options);return r.insertAfterNode(s),r},Ie=function(e,t){return e.setValue(t),e.commit(),e},Re=function(e,t,a){var n=e.startNode.parentNode,s=a?a.startNode:e.endNode,r=t.endNode.nextSibling;r!==s&&_(n,t.startNode,r,s)},$e=function(e){o(e.startNode.parentNode,e.startNode,e.endNode.nextSibling)},Ve=function(e,t,a){for(var n=new Map,s=t;s<=a;s++)n.set(e[s],s);return n},Ue=new WeakMap,Ge=new WeakMap,Be=(Ne=function(e,t,a){var n;return void 0===a?a=t:void 0!==t&&(n=t),function(t){if(!(t instanceof C))throw new Error("repeat can only be used in text bindings");var s,r,i=Ue.get(t)||[],d=Ge.get(t)||[],_=[],o=[],u=[],m=0,l=!0,c=!1,h=void 0;try{for(var M,L=e[Symbol.iterator]();!(l=(M=L.next()).done);l=!0){var y=M.value;u[m]=n?n(y,m):m,o[m]=a(y,m),m++}}catch(e){c=!0,h=e}finally{try{l||null==L.return||L.return()}finally{if(c)throw h}}for(var p=0,Y=i.length-1,f=0,k=o.length-1;p<=Y&&f<=k;)if(null===i[p])p++;else if(null===i[Y])Y--;else if(d[p]===u[f])_[f]=Ie(i[p],o[f]),p++,f++;else if(d[Y]===u[k])_[k]=Ie(i[Y],o[k]),Y--,k--;else if(d[p]===u[k])_[k]=Ie(i[p],o[k]),Re(t,i[p],_[k+1]),p++,k--;else if(d[Y]===u[f])_[f]=Ie(i[Y],o[f]),Re(t,i[Y],i[p]),Y--,f++;else if(void 0===s&&(s=Ve(u,f,k),r=Ve(d,p,Y)),s.has(d[p]))if(s.has(d[Y])){var D=r.get(u[f]),g=void 0!==D?i[D]:null;if(null===g){var v=Ce(t,i[p]);Ie(v,o[f]),_[f]=v}else _[f]=Ie(g,o[f]),Re(t,g,i[p]),i[D]=null;f++}else $e(i[Y]),Y--;else $e(i[p]),p++;for(;f<=k;){var T=Ce(t,_[k+1]);Ie(T,o[f]),_[f++]=T}for(;p<=Y;){var w=i[p++];null!==w&&$e(w)}Ue.set(t,_),Ge.set(t,u)}},function(){var e=Ne.apply(void 0,arguments);return r.set(e,!0),e}),Ke=a(87);class qe{constructor(e,t){this._calendarEvent=e,this._config=t}get rawEvent(){return this._calendarEvent}get id(){return(this.rawEvent.id||this.rawEvent.uid)+this.title}get originCalendar(){return this.rawEvent.originCalendar}get startDateTime(){if(void 0===this._startDateTime){const e=this.rawEvent.start&&this.rawEvent.start.date||this.rawEvent.start.dateTime||this.rawEvent.start||"";this._startDateTime=this._processDate(e)}return this._startDateTime}get endDateTime(){if(void 0===this._endDateTime){const e=this.rawEvent.end&&this.rawEvent.end.date||this.rawEvent.end.dateTime||this.rawEvent.end;this._endDateTime=this._processDate(e,!0)}return this._endDateTime}get addDays(){return void 0!==this.rawEvent.addDays&&this.rawEvent.addDays}get daysLong(){return this.rawEvent.daysLong}get isFirstDay(){return 0===this.rawEvent.addDays}get isLastDay(){return this.rawEvent.addDays===this.rawEvent.daysLong-1}_processDate(e,t=!1){return e?(e=Object(n.a)(e),!1!==this.addDays&&(!t&&this.addDays&&(e=e.add(this.addDays,"days")),!this.isLastDay&&t?e=Object(n.a)(this.startDateTime).endOf("day"):this.isLastDay&&!t&&(e=e.startOf("day"))),e):e}get isRecurring(){return!!this.rawEvent.recurringEventId}get isDeclined(){return 0!==(this.rawEvent.attendees||[]).filter(e=>e.self&&"declined"===e.responseStatus).length}get htmlLink(){return this.rawEvent.htmlLink||""}get isMultiDay(){return!(this.endDateTime.diff(this.startDateTime,"hours")<=24&&0===this.startDateTime.hour())&&(this.startDateTime.date()!==this.endDateTime.date()||void 0)}get title(){let e=this.rawEvent.summary||this.rawEvent.title||"";if(this.rawEvent.daysLong&&(e+=` (${this.addDays+1}/${this.daysLong})`),this._config.removeFromEventTitle){const t=new RegExp(this._config.removeFromEventTitle,"i");e=e.replace(t,"")}return e}get description(){return this.rawEvent.description}get location(){return this.rawEvent.location&&this.rawEvent.location.split(",")[0]||""}get locationAddress(){if(!this.rawEvent.location)return"";return this.rawEvent.location.substring(this.rawEvent.location.indexOf(",")+1).split(" ").join("+")}get isAllDayEvent(){return(!this.isFirstDay||!this.startDateTime.hour()&&!this.startDateTime.minutes())&&(!!this.isFirstDay||(!this.isLastDay||!this.endDateTime.hour()&&!this.endDateTime.minutes())&&(!!this.isLastDay||(!!this.addDays||(this.endDateTime.diff(this.startDateTime,"hours")<=24&&0===this.startDateTime.hour()||void 0))))}}function Ze(e,t,a){t&&!a.disableLinks&&window.open(t)}const Qe=(e,t,a)=>{if(e.isAllDayEvent)return t.fullDayEventText;const n=e.startDateTime&&e.startDateTime.format(a),s=e.endDateTime&&e.endDateTime.format(a);return e.isFirstDay&&`${t.startText}: ${n}`||e.isLastDay&&`${t.endText}: ${s}`||n&&s&&`${n} - ${s}`||""};function Xe(e,t){let a=e.filter((e,t,a)=>t===a.findIndex(t=>(t.id||t.uid)===(e.uid||e.id))).reduce((e,a)=>{a.originCalendar=t.entities.find(e=>e.entity===a.entity.entity);const n=new qe(a,t);if(t.ignoreEventsExpression&&n.title){if(new RegExp(t.ignoreEventsExpression,"i").test(n.title))return e}if(t.hideDeclined&&n.isDeclined)return e;if(t.ignoreEventsByLocationExpression&&n.location){if(new RegExp(t.ignoreEventsByLocationExpression,"i").test(n.location))return e}if(t.showMultiDay&&n.isMultiDay){const a=s().startOf("day").add(t.numberOfDays,"days");let r=n.endDateTime.diff(n.startDateTime,"days")+1;const i=[];0===n.endDateTime.hour()&&0===n.endDateTime.minutes()&&(r-=1);for(let e=0;e<r;e++){const s=JSON.parse(JSON.stringify(n.rawEvent));s.addDays=e,s.daysLong=r;const d=new qe(s,t);a.isAfter(d.startDateTime)&&i.push(d)}e=e.concat(i)}else e.push(n);return e},[]);const n=s().startOf("day");if(a=a.filter(e=>e.endDateTime.isAfter(n)),t.hidePastEvents){const e=s();a=a.filter(t=>t.endDateTime.isAfter(e))}return a.sort((e,t)=>e.startDateTime.isBefore(t.startDateTime)?-1:1),a}var et=xe`
+var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.startNode,s=a.insertBefore(p(),n);a.insertBefore(p(),n);var r=new C(e.options);return r.insertAfterNode(s),r},Ie=function(e,t){return e.setValue(t),e.commit(),e},Re=function(e,t,a){var n=e.startNode.parentNode,s=a?a.startNode:e.endNode,r=t.endNode.nextSibling;r!==s&&_(n,t.startNode,r,s)},$e=function(e){o(e.startNode.parentNode,e.startNode,e.endNode.nextSibling)},Ve=function(e,t,a){for(var n=new Map,s=t;s<=a;s++)n.set(e[s],s);return n},Ue=new WeakMap,Ge=new WeakMap,Be=(Ne=function(e,t,a){var n;return void 0===a?a=t:void 0!==t&&(n=t),function(t){if(!(t instanceof C))throw new Error("repeat can only be used in text bindings");var s,r,i=Ue.get(t)||[],d=Ge.get(t)||[],_=[],o=[],u=[],m=0,l=!0,c=!1,h=void 0;try{for(var M,L=e[Symbol.iterator]();!(l=(M=L.next()).done);l=!0){var y=M.value;u[m]=n?n(y,m):m,o[m]=a(y,m),m++}}catch(e){c=!0,h=e}finally{try{l||null==L.return||L.return()}finally{if(c)throw h}}for(var p=0,Y=i.length-1,f=0,k=o.length-1;p<=Y&&f<=k;)if(null===i[p])p++;else if(null===i[Y])Y--;else if(d[p]===u[f])_[f]=Ie(i[p],o[f]),p++,f++;else if(d[Y]===u[k])_[k]=Ie(i[Y],o[k]),Y--,k--;else if(d[p]===u[k])_[k]=Ie(i[p],o[k]),Re(t,i[p],_[k+1]),p++,k--;else if(d[Y]===u[f])_[f]=Ie(i[Y],o[f]),Re(t,i[Y],i[p]),Y--,f++;else if(void 0===s&&(s=Ve(u,f,k),r=Ve(d,p,Y)),s.has(d[p]))if(s.has(d[Y])){var D=r.get(u[f]),g=void 0!==D?i[D]:null;if(null===g){var v=Ce(t,i[p]);Ie(v,o[f]),_[f]=v}else _[f]=Ie(g,o[f]),Re(t,g,i[p]),i[D]=null;f++}else $e(i[Y]),Y--;else $e(i[p]),p++;for(;f<=k;){var T=Ce(t,_[k+1]);Ie(T,o[f]),_[f++]=T}for(;p<=Y;){var w=i[p++];null!==w&&$e(w)}Ue.set(t,_),Ge.set(t,u)}},function(){var e=Ne.apply(void 0,arguments);return r.set(e,!0),e}),Ke=a(87);class qe{constructor(e,t){this._calendarEvent=e,this._config=t}get rawEvent(){return this._calendarEvent}get id(){return(this.rawEvent.id||this.rawEvent.uid)+this.title}get originCalendar(){return this.rawEvent.originCalendar}get entity(){return this._calendarEvent.hassEntity||{}}get originName(){const e=this.originCalendar;if(e&&e.name)return e.name;const t=this.entity;return t&&t.attributes&&t.attributes.friendly_name?t.attributes.friendly_name:e&&e.entity?e.entity:t&&t.entity||t||"Unknown"}get startDateTime(){if(void 0===this._startDateTime){const e=this.rawEvent.start&&this.rawEvent.start.date||this.rawEvent.start.dateTime||this.rawEvent.start||"";this._startDateTime=this._processDate(e)}return this._startDateTime}get endDateTime(){if(void 0===this._endDateTime){const e=this.rawEvent.end&&this.rawEvent.end.date||this.rawEvent.end.dateTime||this.rawEvent.end;this._endDateTime=this._processDate(e,!0)}return this._endDateTime}get addDays(){return void 0!==this.rawEvent.addDays&&this.rawEvent.addDays}get daysLong(){return this.rawEvent.daysLong}get isFirstDay(){return 0===this.rawEvent.addDays}get isLastDay(){return this.rawEvent.addDays===this.rawEvent.daysLong-1}_processDate(e,t=!1){return e?(e=Object(n.a)(e),!1!==this.addDays&&(!t&&this.addDays&&(e=e.add(this.addDays,"days")),!this.isLastDay&&t?e=Object(n.a)(this.startDateTime).endOf("day"):this.isLastDay&&!t&&(e=e.startOf("day"))),e):e}get isRecurring(){return!!this.rawEvent.recurringEventId}get isDeclined(){return 0!==(this.rawEvent.attendees||[]).filter(e=>e.self&&"declined"===e.responseStatus).length}get htmlLink(){return this.rawEvent.htmlLink||""}get isMultiDay(){return!(this.endDateTime.diff(this.startDateTime,"hours")<=24&&0===this.startDateTime.hour())&&(this.startDateTime.date()!==this.endDateTime.date()||void 0)}get title(){let e=this.rawEvent.summary||this.rawEvent.title||"";if(this.rawEvent.daysLong&&(e+=` (${this.addDays+1}/${this.daysLong})`),this._config.removeFromEventTitle){const t=new RegExp(this._config.removeFromEventTitle,"i");e=e.replace(t,"")}return e}get description(){return this.rawEvent.description}get location(){return this.rawEvent.location&&this.rawEvent.location.split(",")[0]||""}get locationAddress(){if(!this.rawEvent.location)return"";return this.rawEvent.location.substring(this.rawEvent.location.indexOf(",")+1).split(" ").join("+")}get isAllDayEvent(){return(!this.isFirstDay||!this.startDateTime.hour()&&!this.startDateTime.minutes())&&(!!this.isFirstDay||(!this.isLastDay||!this.endDateTime.hour()&&!this.endDateTime.minutes())&&(!!this.isLastDay||(!!this.addDays||(this.endDateTime.diff(this.startDateTime,"hours")<=24&&0===this.startDateTime.hour()||void 0))))}}function Ze(e,t,a){t&&!a.disableLinks&&window.open(t)}const Qe=(e,t,a)=>{if(e.isAllDayEvent)return t.fullDayEventText;const n=e.startDateTime&&e.startDateTime.format(a),s=e.endDateTime&&e.endDateTime.format(a);return e.isFirstDay&&`${t.startText}: ${n}`||e.isLastDay&&`${t.endText}: ${s}`||n&&s&&`${n} - ${s}`||""};function Xe(e,t){let a=e.filter((e,t,a)=>t===a.findIndex(t=>(t.id||t.uid)===(e.uid||e.id))).reduce((e,a)=>{a.originCalendar=t.entities.find(e=>e.entity===a.entity.entity);const n=new qe(a,t);if(t.ignoreEventsExpression&&n.title){if(new RegExp(t.ignoreEventsExpression,"i").test(n.title))return e}if(t.hideDeclined&&n.isDeclined)return e;if(t.ignoreEventsByLocationExpression&&n.location){if(new RegExp(t.ignoreEventsByLocationExpression,"i").test(n.location))return e}if(t.showMultiDay&&n.isMultiDay){const a=s().startOf("day").add(t.numberOfDays,"days");let r=n.endDateTime.diff(n.startDateTime,"days")+1;const i=[];0===n.endDateTime.hour()&&0===n.endDateTime.minutes()&&(r-=1);for(let e=0;e<r;e++){const s=JSON.parse(JSON.stringify(n.rawEvent));s.addDays=e,s.daysLong=r;const d=new qe(s,t);a.isAfter(d.startDateTime)&&i.push(d)}e=e.concat(i)}else e.push(n);return e},[]);const n=s().startOf("day");if(a=a.filter(e=>e.endDateTime.isAfter(n)),t.hidePastEvents){const e=s();a=a.filter(t=>t.endDateTime.isAfter(e))}return a.sort((e,t)=>e.startDateTime.isBefore(t.startDateTime)?-1:1),a}var et=xe`
 
     .calendar-card {
         display: flex;
@@ -787,13 +787,18 @@ var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.st
     }
 `,tt={title:"Calendar",numberOfDays:7,timeFormat:"HH:mma",dateTopFormat:"DD",dateBottomFormat:"ddd",hideTime:!1,progressBar:!1,showLocation:!1,showLocationIcon:!0,hidePastEvents:!1,showMultiDay:!1,eventsLimit:99,showEventOrigin:!1,hideHeader:!1,highlightToday:!1,ignoreEventsExpression:"",ignoreEventsByLocationExpression:"",removeFromEventTitle:"",maxHeight:!1,hardLimit:!1,hideDeclined:!1,notifyEntity:null,disableLinks:!1,notifyDateTimeFormat:"MM/DD/YYYY HH:mma",fullDayEventText:"All day",startText:"Start",endText:"End"};var at=xe`
     .entities {
-        padding-top: 10px;
+        margin-top: 30px;
+        margin-top: 30px;
     }
 
     .entities paper-checkbox {
         display: block;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
         margin-left: 10px;
+    }
+
+    .entity-select {
+        margin-top: 20px;
     }
 
     .checkbox-options:first-of-type {
@@ -921,22 +926,26 @@ var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.st
           <div class='entities'>
             <h3>Entities</h3>
             ${this.entityOptions.map(e=>ee`
-                  <paper-checkbox 
-                    @checked-changed="${this.entityChanged}" 
-                    .checked=${e.checked}
-                    .entityId="${e.entity}"
-                  >${e.entity}</paper-checkbox>
+                  <div class='entity-select'>
+                    <paper-checkbox 
+                      @checked-changed="${this.entityChanged}" 
+                      .checked=${e.checked}
+                      .entityId="${e.entity}"
+                    >
+                      ${e.entity}
+                    </paper-checkbox>
 
-                  ${this._config.showEventOrigin?ee`
-                    <div class='origin-calendar'>
-                      <paper-input
-                        label="Calendar Origin"
-                        .value="${e.name}"
-                        .entityId="${e.entity}"
-                        @value-changed="${this.entityNameChanged}"
-                      ></paper-input>
-                    </div>
-                  `:ee``}
+                    ${this._config.showEventOrigin?ee`
+                        <div class='origin-calendar'>
+                          <paper-input
+                            label="Calendar Origin"
+                            .value="${e.name}"
+                            .entityId="${e.entity}"
+                            @value-changed="${this.entityNameChanged}"
+                          ></paper-input>
+                        </div>
+                      `:ee``}
+                  </div>
                 `)}
           </div>
 
@@ -1051,7 +1060,7 @@ var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.st
             </div>
           `}
       </ha-card>
-    `;var e}async updateCard(){if(s.locale(this.hass.language),!this.cardNeedsUpdating&&s().diff(this.lastEventsUpdate,"seconds")<60)return;this.lastEventsUpdate=s(),this.cardNeedsUpdating=!1;const{events:e,failedEvents:t}=await async function(e,t){const a=s().startOf("day"),n=a.format("YYYY-MM-DDTHH:mm:ss"),r=a.add(e.numberOfDays,"days").format("YYYY-MM-DDTHH:mm:ss"),i=[],d=[],_=[];return e.entities.forEach(e=>{const a=e&&e.entity||e,s=`calendars/${a}?start=${n}Z&end=${r}Z`;_.push(t.callApi("get",s).then(t=>t.map(t=>(t.entity=e,t))).then(e=>{i.push(...e)}).catch(t=>{d.push({name:e.name||a,error:t})}))}),await Promise.all(_),{failedEvents:d,events:Xe(i,e)}}(this.config,this.__hass),a=function(e,t){let a=e.reduce((e,t)=>{const a=s(t.startDateTime).format("YYYY-MM-DD"),n=e.findIndex(e=>e.day===a);return n>-1?e[n].events.push(t):e.push({day:a,events:[t]}),e},[]),n=0,r=!1;return a=a.map(e=>{if(!r){if(n+=e.events.length,r=t.eventsLimit<n,t.hardLimit){const a=n-t.eventsLimit;e.events=e.events.slice(0,e.events.length-a)}return e}}).filter(Boolean)}(e,this.config);this.oldEvents=await async function(e,t,a,n){if(!n||!e.notifyEntity)return a;const s=a.filter(e=>{return!n.find(t=>t.id===e.id)});for await(const a of s)try{const n=`New Calendar Event: ${a.title}`,s=Qe(a,e,e.notifyDateTimeFormat);await t.callService("notify",e.notifyEntity,{title:n,message:s})}catch(e){console.error(e)}return a}(this.config,this.__hass,e,this.oldEvents);const n=t.reduce((e,t)=>ee`
+    `;var e}async updateCard(){if(s.locale(this.hass.language),!this.cardNeedsUpdating&&s().diff(this.lastEventsUpdate,"seconds")<60)return;this.lastEventsUpdate=s(),this.cardNeedsUpdating=!1;const{events:e,failedEvents:t}=await async function(e,t){const a=s().startOf("day"),n=a.format("YYYY-MM-DDTHH:mm:ss"),r=a.add(e.numberOfDays,"days").format("YYYY-MM-DDTHH:mm:ss"),i=[],d=[],_=[];return e.entities.forEach(e=>{const a=e&&e.entity||e,s=`calendars/${a}?start=${n}Z&end=${r}Z`;_.push(t.callApi("get",s).then(n=>n.map(n=>(n.entity=e,n.calendarEntity=a,n.hassEntity=t.states[a],n))).then(e=>{i.push(...e)}).catch(t=>{d.push({name:e.name||a,error:t})}))}),await Promise.all(_),{failedEvents:d,events:Xe(i,e)}}(this.config,this.__hass),a=function(e,t){let a=e.reduce((e,t)=>{const a=s(t.startDateTime).format("YYYY-MM-DD"),n=e.findIndex(e=>e.day===a);return n>-1?e[n].events.push(t):e.push({day:a,events:[t]}),e},[]),n=0,r=!1;return a=a.map(e=>{if(!r){if(n+=e.events.length,r=t.eventsLimit<n,t.hardLimit){const a=n-t.eventsLimit;e.events=e.events.slice(0,e.events.length-a)}return e}}).filter(Boolean)}(e,this.config);this.oldEvents=await async function(e,t,a,n){if(!n||!e.notifyEntity)return a;const s=a.filter(e=>{return!n.find(t=>t.id===e.id)});for await(const a of s)try{const n=`New Calendar Event: ${a.title}`,s=Qe(a,e,e.notifyDateTimeFormat);await t.callService("notify",e.notifyEntity,{title:n,message:s})}catch(e){console.error(e)}return a}(this.config,this.__hass,e,this.oldEvents);const n=t.reduce((e,t)=>ee`
         ${e}
         <tr>
           <td class="failed-name">${t.name}</td>
@@ -1068,9 +1077,9 @@ var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.st
               </td>
               <td class="overview ${o?"no-pointer":""}" @click=${t=>Ze(0,e.htmlLink,this.config)}>
                 <div class="title">${e.title}</div>
-                ${function(e,t){return t.showEventOrigin&&e.originCalendar&&e.originCalendar.name?ee`
+                ${function(e,t){return t.showEventOrigin?ee`
       <div class='event-origin'>
-        <span>${e.originCalendar.name}</span>
+        <span>${e.originName}</span>
         <ha-icon icon="mdi:calendar-blank-outline"></ha-icon> 
       </div>
     `:ee``}(e,this.config)}

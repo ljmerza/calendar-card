@@ -131,6 +131,8 @@ export async function getAllEvents(config, hass){
                 .then(rawEvents => {
                     return rawEvents.map(event => {
                         event.entity = entity;
+                        event.calendarEntity = calendarEntity;
+                        event.hassEntity = hass.states[calendarEntity];
                         return event;
                     });
                 })
