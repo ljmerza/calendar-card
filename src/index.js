@@ -106,7 +106,7 @@ class CalendarCard extends LitElement {
     moment.locale(this.hass.language);
 
     // dont update if we dont need it to conserve api calls
-    if (!this.cardNeedsUpdating && moment().diff(this.lastEventsUpdate, 'seconds') < 60) return;
+    if (!this.cardNeedsUpdating && moment().diff(this.lastEventsUpdate, 'seconds') < 600) return;
 
     this.lastEventsUpdate = moment();
     this.cardNeedsUpdating = false;
@@ -154,8 +154,8 @@ class CalendarCard extends LitElement {
               </td>
               <td class="overview ${disableLink ? 'no-pointer' : ''}" @click=${e => openLink(e, event.htmlLink, this.config)}>
                 <div class="title">${event.title}</div>
-                ${getEventOrigin(event, this.config)}
                 ${getTimeHtml(event, this.config)}
+                ${getEventOrigin(event, this.config)}
                 ${this.config.progressBar ? getProgressBar(event) : ''}
               </td>
               <td class="location">

@@ -90,9 +90,7 @@ export async function sendNotificationForNewEvents(config, hass, events, oldEven
  * @return {String}
  */
 export const getEventDateTime = (event, config, timeFormat) => {
-    if (event.isAllDayEvent){
-        return config.fullDayEventText;
-    }
+    if (event.isAllDayEvent) return config.fullDayEventText;
 
     const start = event.startDateTime && event.startDateTime.format(timeFormat);
     const end = event.endDateTime && event.endDateTime.format(timeFormat);
@@ -193,29 +191,7 @@ export function processEvents(allEvents, config) {
          * then add as 'new' event
          */
         if (config.showMultiDay && newEvent.isMultiDay) {
-            const today = moment().startOf('day');
-            const endDate = today.add(config.numberOfDays, 'days');
-
-            let daysLong = (newEvent.endDateTime.diff(newEvent.startDateTime, 'days') + 1);
-            const partialEvents = [];
-
-            // if we are all day events then we don't need that last day ending at 12am
-            if (newEvent.endDateTime.hour() === 0 && newEvent.endDateTime.minutes() === 0) daysLong -= 1;
-
-            for (let i = 0; i < daysLong; i++) {
-                // copy event then add the current day/total days to 'new' event
-                const copiedEvent = JSON.parse(JSON.stringify(newEvent.rawEvent));
-                copiedEvent.addDays = i;
-                copiedEvent.daysLong = daysLong;
-
-                const partialEvent = new CalendarEvent(copiedEvent, config);
-
-                // only add event if starting before the config numberOfDays
-                if (endDate.isAfter(partialEvent.startDateTime)) {
-                    partialEvents.push(partialEvent)
-                }
-            }
-
+            const partialEvents = newEvent.splitIntoMultiDay(newEvent);
             events = events.concat(partialEvents);
 
         } else {

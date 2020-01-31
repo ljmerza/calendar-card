@@ -52,7 +52,8 @@ export default class CalendarEvent {
             const date = this.rawEvent.start && this.rawEvent.start.date || this.rawEvent.start.dateTime || this.rawEvent.start || '';
             this._startDateTime =  this._processDate(date);
         }
-        return this._startDateTime;
+
+        return this._startDateTime.clone();
     }
 
     /**
@@ -64,7 +65,8 @@ export default class CalendarEvent {
             const date = this.rawEvent.end && this.rawEvent.end.date || this.rawEvent.end.dateTime || this.rawEvent.end;
             this._endDateTime = this._processDate(date, true);
         }
-        return this._endDateTime;
+
+        return this._endDateTime.clone();
     }
 
     get addDays(){
@@ -76,11 +78,11 @@ export default class CalendarEvent {
     }
 
     get isFirstDay(){
-        return this.rawEvent.addDays === 0;
+        return this.rawEvent._isFirstDay;
     }
 
     get isLastDay(){
-        return this.rawEvent.addDays === (this.rawEvent.daysLong - 1);
+        return this.rawEvent._isLastDay;
     }
 
     /**
@@ -137,8 +139,64 @@ export default class CalendarEvent {
      * @return {Boolean}
      */
     get isMultiDay() {
-        if (this.endDateTime.diff(this.startDateTime, 'hours') <= 24 && this.startDateTime.hour() === 0) return false;
-        if (this.startDateTime.date() !== this.endDateTime.date()) return true;
+        // if more than 24 hours we automatically know it's multi day
+        if (this.endDateTime.diff(this.startDateTime, 'hours') > 24) return true;
+
+        // end date could be at midnight which is not multi day but is seen as the next day
+        // subtract one minute and if that made it one day then its NOT one day
+        const daysDifference = Math.abs(this.startDateTime.date() - this.endDateTime.subtract(1, 'minute').date());
+        if (daysDifference === 1 && this.endDateTime.hours() === 0 && this.endDateTime.minutes() === 0) return false;
+
+        return !!daysDifference;
+    }
+
+    /**
+     * is the event a full day event?
+     * @return {Boolean}
+     */
+    get isAllDayEvent() {
+        const isMidnightStart = this.startDateTime.startOf('day').diff(this.startDateTime) === 0;
+        const isMidnightEnd = this.endDateTime.startOf('day').diff(this.endDateTime) === 0;
+        if (isMidnightStart && isMidnightEnd) return true;
+
+        // check for days that are between multi days - they ARE all day
+        if(!this.isFirstDay && !this.isLastDay && this.daysLong) return true;
+
+        return isMidnightStart && isMidnightEnd;
+    }
+
+    /**
+     * split this event into a multi day event
+     * @param {*} newEvent 
+     */
+    splitIntoMultiDay(newEvent) {
+        const partialEvents = [];
+        
+        // multi days start at two days
+        // every 24 hours is a day. if we do get some full days then just add to 1 daysLong
+        let daysLong = 2;
+        const fullDays = parseInt(this.endDateTime.subtract(1, 'minutes').diff(this.startDateTime, 'hours') / 24);
+        if (fullDays) daysLong  = fullDays + 1;
+
+        for (let i = 0; i < daysLong; i++) {
+            // copy event then add the current day/total days to 'new' event
+            const copiedEvent = JSON.parse(JSON.stringify(newEvent.rawEvent));
+            copiedEvent.addDays = i;
+            copiedEvent.daysLong = daysLong;
+            
+            copiedEvent._isFirstDay = i === 0;
+            copiedEvent._isLastDay = i === (daysLong - 1);
+            
+            const partialEvent = new CalendarEvent(copiedEvent, this._config);
+
+            // only add event if starting before the config numberOfDays
+            const endDate = moment().startOf('day').add(this._config.numberOfDays, 'days');
+            if (endDate.isAfter(partialEvent.startDateTime)) {
+                partialEvents.push(partialEvent)
+            }
+        }
+
+        return partialEvents;
     }
 
     /**
@@ -187,25 +245,5 @@ export default class CalendarEvent {
 
         const address = this.rawEvent.location.substring(this.rawEvent.location.indexOf(',') + 1);
         return address.split(' ').join('+');
-    }
-
-    /**
-     * is the event a full day event?
-     * @return {Boolean}
-     */
-    get isAllDayEvent() {
-
-        // if multiday then only full day is first day is all day
-        if (this.isFirstDay && (this.startDateTime.hour() || this.startDateTime.minutes())) return false;
-        else if (this.isFirstDay) return true;
-        // same for last day
-        if (this.isLastDay && (this.endDateTime.hour() || this.endDateTime.minutes())) return false;
-        else if (this.isLastDay) return true;
-        
-        // if we got this far and add days is true then it's a middle day of a multi day event so its all day
-        if(this.addDays) return true;
-
-        // 
-        if (this.endDateTime.diff(this.startDateTime, 'hours') <= 24 && this.startDateTime.hour() === 0) return true;
     }
 }

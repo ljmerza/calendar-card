@@ -104,10 +104,6 @@ const style = css`
         color: var(--accent-color);
     }
 
-    .event-origin {
-        float: right;
-    }
-
     .event-origin span {
         color: var(--accent-color);
         margin-right: -4px;
