@@ -919,6 +919,14 @@ var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.st
             >Disable Links</paper-checkbox>
           </div>
 
+          <div class='checkbox-options'>
+            <paper-checkbox
+              @checked-changed="${this.checkboxChanged}" 
+              .checked=${this._config.maxHeight}
+              .configValue="${"maxHeight"}"
+            >Max Height</paper-checkbox>
+          </div>
+
           <div class='entities'>
             <h3>Entities</h3>
             ${this.entityOptions.map(e=>ee`
