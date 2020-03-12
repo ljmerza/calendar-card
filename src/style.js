@@ -41,6 +41,7 @@ const style = css`
     table {
         border-spacing: 0;
         margin-bottom: 10px;
+        margin-left: 10px;
         width: 100%;
     }
 
