@@ -1,6 +1,6 @@
 {
     "name": "calendar-card",
-    "version": "3.108.4",
+    "version": "3.108.5",
     "description": "A calendar card for Home Assistant Lovelace UI",
     "keywords": [
         "home-assistant",
