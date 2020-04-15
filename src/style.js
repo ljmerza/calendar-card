@@ -41,7 +41,6 @@ const style = css`
     table {
         border-spacing: 0;
         margin-bottom: 10px;
-        margin-left: 10px;
         width: 100%;
     }
 
@@ -57,6 +56,7 @@ const style = css`
     .day-wrapper.day-wrapper-last > td {
         padding-bottom: 10px;
         border-bottom: 1px solid;
+        border-color: var(--accent-color);
     }
 
     .day-wrapper.day-wrapper-last:last-child > td {

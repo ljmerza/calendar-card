@@ -708,7 +708,6 @@ var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.st
     table {
         border-spacing: 0;
         margin-bottom: 10px;
-        margin-left: 10px;
         width: 100%;
     }
 
@@ -724,6 +723,7 @@ var Ne,Ce=function(e,t){var a=e.startNode.parentNode,n=void 0===t?e.endNode:t.st
     .day-wrapper.day-wrapper-last > td {
         padding-bottom: 10px;
         border-bottom: 1px solid;
+        border-color: var(--accent-color);
     }
 
     .day-wrapper.day-wrapper-last:last-child > td {
