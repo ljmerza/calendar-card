@@ -27,19 +27,10 @@ Show Google calendar events
 * Enable kiosk mode (no click events)
 
 
-## Prerequisites
+## Installation
 ---
 You should have setup Google calendar integration or Caldav integration in HomeAssistant.
-
-## Installation through [HACS](https://github.com/custom-components/hacs)
----
-Add the following to resources in your lovelace config:
-
-```yaml
-resources:
-  - url: /community_plugin/calendar-card/calendar-card.js
-    type: js
-```
+Installation through [HACS](https://github.com/custom-components/hacs)
 
 ## Options
 ---
