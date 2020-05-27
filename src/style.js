@@ -77,17 +77,21 @@ const style = css`
         border-style: solid;
         border-color: var(--accent-color);
         border-width: 1px 0 0 0;
-        margin-top: -7px;
-        margin-left: 0px;
         color: var(--primary-color);
+        display:inline-block;
+        position:relative;
+        top:-7px;
         width: 100%;
+        margin: 0;
     }
 
     .day-wrapper ha-icon.progress-bar {
-        height: 9px;
-        width: 9px;
-        margin-top: 2px;
+        display:block;
+        height:9px;
+        --mdc-icon-size: 9px;
         color: var(--accent-color);
+        position:relative;
+        top:5px;
     }
 
     .day-wrapper .overview {
@@ -111,9 +115,11 @@ const style = css`
     }
 
     .event-origin ha-icon {
-        height: 13px;
-        margin-top: -3px;
+        position: relative;
+        top: -1px;
+        left: 4px;
         color: var(--accent-color);
+        --mdc-icon-size: 13px;
     }
 `;
 
