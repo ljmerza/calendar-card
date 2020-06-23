@@ -135,6 +135,14 @@ export default class CalendarEvent {
     }
 
     /**
+     * get the URL from the source element
+     * @return {String}
+     */
+    get sourceUrl() {
+        return (this.rawEvent.source) ? this.rawEvent.source.url || '' : '';
+    }
+
+    /**
      * is a multiday event (not all day)
      * @return {Boolean}
      */

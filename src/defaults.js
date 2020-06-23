@@ -24,6 +24,7 @@ export default {
     hideDeclined: false,
     notifyEntity: null,
     disableLinks: false,
+    useSourceUrl: false,
     notifyDateTimeFormat: 'MM/DD/YYYY HH:mma',
     fullDayEventText: 'All day',
     startText: 'Start',
