@@ -145,14 +145,17 @@ class CalendarCard extends LitElement {
         const eventDateTime = moment(eventDay.day);
         const todayKls = this.config.highlightToday && eventDateTime.isSame(today, "day") ? 'highlight-events' : '';
 
-        const disableLink = this.config.disableLinks || !event.htmlLink;
+        // use the source element url if it exists
+        const linkUrl = this.config.useSourceUrl && event.sourceUrl ? event.sourceUrl : event.htmlLink;
         
+        const disableLink = this.config.disableLinks || !linkUrl;
+
           return html`
             <tr class='day-wrapper ${lastKls} ${todayKls}'>
               <td class="${isLastEventInGroup ? '' : 'date'}">
                 ${getDateHtml(index, eventDateTime, this.config)}
               </td>
-              <td class="overview ${disableLink ? 'no-pointer' : ''}" @click=${e => openLink(e, event.htmlLink, this.config)}>
+              <td class="overview ${disableLink ? 'no-pointer' : ''}" @click=${e => openLink(e, linkUrl, this.config)}>
                 <div class="title">${event.title}</div>
                 ${getTimeHtml(event, this.config)}
                 ${getEventOrigin(event, this.config)}
