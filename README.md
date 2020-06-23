@@ -41,6 +41,7 @@ Installation through [HACS](https://github.com/custom-components/hacs)
 | dateTopFormat | string | **Optional** | `DD` Format for top line of event date
 | dateBottomFormat | string | **Optional** | `ddd` Format to bottom line of event date
 | disableLinks | boolean | **Optional** | `false` Disables all links (to open calendar and location)
+| useSourceUrl | boolean | **Optional** | `false` Open events via the source url instead of html link
 | endText | string | **Optional** | `End` Set custom text for event end time
 | eventsLimit | integer | **Optional** | `99` Maximum number of events to show (shows rest of day after cut off)
 | fullDayEventText | string | **Optional** | `All day` Set custom text for a full day event
