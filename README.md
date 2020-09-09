@@ -1,4 +1,4 @@
-**NOTE** The next version of HA (0.115) will include a lovelace calendar card builtin. It wont include all the features of this card right away but if development is continued on that card to at least add the most popular features then it will make this card obsolete. 
+**NOTE** The next version of HA (0.115) will include a lovelace calendar card builtin. It wont include all the features of this card right away but if development is continued on that card to at least add the most popular features then it will make this card obsolete. See https://github.com/home-assistant/frontend/pull/5813
 
 # Calendar Card for Home Assistant
 Show Google calendar events
